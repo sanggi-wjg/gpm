@@ -24,7 +24,7 @@ class TestUserRepo:
 
     def test_find_user_by_email(self, test_db: Session):
         is_exist = user_repo.is_exist_user_by_email(test_db, "123")
-        assert is_exist == False
+        assert not is_exist
 
 
 class TestUserRouter:
