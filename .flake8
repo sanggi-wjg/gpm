@@ -1,0 +1,17 @@
+[flake8]
+exclude =
+    venv/,
+    tests/*,
+    .git,
+    .gitignore,
+    *.pot,
+    *.py[co],
+    __pycache__,
+    .env
+
+
+ignore =
+    E501,
+    E251,
+    F401,
+    E203
