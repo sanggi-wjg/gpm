@@ -5,7 +5,7 @@ from starlette import status
 from starlette.testclient import TestClient
 
 from app.service import tech_service
-from app.schemas.tech_schema import TechCategory, RegisterTechCategory
+from app.schemas.tech_schema import TechCategory, TechCategoryRegister
 
 
 class TestTechCategoryRepo:
@@ -15,7 +15,7 @@ class TestTechCategoryRepo:
 
     def test_create_new_tech_category(self, test_db: Session):
         category_name = "Programming Language"
-        register_tech_category = RegisterTechCategory(name=category_name)
+        register_tech_category = TechCategoryRegister(name=category_name)
 
         new_tech_category = tech_service.create_tech_category(test_db, register_tech_category)
 
@@ -36,7 +36,7 @@ class TestTechCategoryRouter:
         # given
         category_name = "Programming Language"
         # when
-        response = client.post(self.url, json=jsonable_encoder(RegisterTechCategory(name=category_name)))
+        response = client.post(self.url, json=jsonable_encoder(TechCategoryRegister(name=category_name)))
         data = response.json()
         tech_category = TechCategory(**data)
         # then
@@ -51,7 +51,7 @@ class TestTechCategoryDetailRouter:
     def get_url(self, client: TestClient):
         url = "/api/v1/tech-categories"
 
-        response = client.post(url, json=jsonable_encoder(RegisterTechCategory(name="Programming Language")))
+        response = client.post(url, json=jsonable_encoder(TechCategoryRegister(name="Programming Language")))
         tech_category = TechCategory(**response.json())
         assert response.status_code == status.HTTP_201_CREATED
         assert tech_category.id == 1
@@ -66,7 +66,7 @@ class TestTechCategoryDetailRouter:
         # given
         change_name = "Framework"
         # when
-        response = client.put(self.get_url(client), json=jsonable_encoder(RegisterTechCategory(name=change_name)))
+        response = client.put(self.get_url(client), json=jsonable_encoder(TechCategoryRegister(name=change_name)))
         tech_category = TechCategory(**response.json())
         find_tech_category = tech_service.find_tech_category_by_id(test_db, 1)
         # then

@@ -12,7 +12,7 @@ class DuplicateTechCategoryName(TechCategoryException):
         self.name = name
 
 
-async def user_duplicate_tech_category_name_handler(request: Request, e: DuplicateTechCategoryName):
+async def duplicate_tech_category_name_handler(request: Request, e: DuplicateTechCategoryName):
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
         content={"detail": f"{e.name} is duplicated"}

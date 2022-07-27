@@ -8,6 +8,7 @@
    * Blog, Instagram 등도 아이디만 입력되면 되게
 3. GitHub Stat 출력
 4. Tech Stack 선택 
+5. 결과 Markdown 내용 출력 및 복사 기능
 
 ### 사용자 페이지
 * User는 관리자만 할당
@@ -17,13 +18,16 @@
 ## ERD
 
 ## TODO:
-* [ ] GitHub Action Lint & Test workflow 작성
-* [ ] JWT 구현
+* [X] GitHub Action Lint & Test workflow 작성
+* [X] GitHub Action AWS 배포 작성
+  * [ ] Dockerfile 작성
+  * [ ] Docker-compose file 작성
+* [X] JWT 구현
 * [ ] Redis cache 적용
 * [ ] GitHub REST API 연동 구현
   * https://docs.github.com/en/rest/overview/resources-in-the-rest-api#schema
 * [ ] sqlalchemy.exc.IntegrityError Handle 구현
-
+* [ ] pytest conftest 정리 
 
 ---
 ### Lint
