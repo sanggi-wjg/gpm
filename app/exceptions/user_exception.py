@@ -18,17 +18,6 @@ async def user_duplicate_email_handler(request: Request, e: DuplicateEmail):
     )
 
 
-class UserNotFound(UserException):
-    pass
-
-
-async def user_not_found_handler(request: Request, e: UserNotFound):
-    return JSONResponse(
-        status_code=status.HTTP_404_NOT_FOUND,
-        content={"detail": "User not found"}
-    )
-
-
 class NotExistEmail(UserException):
 
     def __init__(self, email):

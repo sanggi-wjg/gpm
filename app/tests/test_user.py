@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from starlette import status
 
-from app.repositories import user_repo
+from app.service import user_service
 from app.schemas.user_schema import User, RegisterUser
 
 
@@ -19,7 +19,7 @@ class TestUserRepo:
             password1="123",
             password2="123"
         )
-        new_user = user_repo.create_user(test_db, register_user)
+        new_user = user_service.create_user(test_db, register_user)
         assert new_user.id == 1
         assert new_user.email == "test@host.com"
 
@@ -27,12 +27,10 @@ class TestUserRepo:
 class TestUserRouter:
 
     def setup_method(self, method):
-        self.url = {
-            'user-list': '/api/v1/users'
-        }
+        self.url = '/api/v1/users'
 
     def test_get_users(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers):
-        response = client.get(self.url.get('user-list'), headers=access_token_headers)
+        response = client.get(self.url, headers=access_token_headers)
         assert response.status_code == status.HTTP_200_OK
 
     def test_post_users(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers):
@@ -43,12 +41,9 @@ class TestUserRouter:
             password2="123",
         )
         # when
-        response = client.post(self.url.get('user-list'),
-                               json=jsonable_encoder(register_user),
-                               headers=access_token_headers)
+        response = client.post(self.url, json=jsonable_encoder(register_user), headers=access_token_headers)
         data = response.json()
         user = User(**data)
-
         # then
         assert response.status_code == status.HTTP_201_CREATED
         assert user

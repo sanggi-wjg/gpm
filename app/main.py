@@ -7,9 +7,15 @@ from app.core.config import get_config_settings
 
 from app.database import models
 from app.database.database import Engine
-from app.exceptions.user_exception import bad_credentials_handler, NotExistEmail, BadCredentials, \
+from app.exceptions.exception import not_found_handler, NotFound
+from app.exceptions.tech_category_exception import (
+    DuplicateTechCategoryName, user_duplicate_tech_category_name_handler
+)
+from app.exceptions.user_exception import (
+    bad_credentials_handler, NotExistEmail, BadCredentials,
     not_exist_email_handler, user_duplicate_email_handler, DuplicateEmail
-from app.routers import home, user, auth
+)
+from app.routers import home, user, auth, tech_category
 
 settings = get_config_settings()
 
@@ -29,14 +35,17 @@ def create_app():
         logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
     # exceptions
+    app.add_exception_handler(NotFound, not_found_handler)
     app.add_exception_handler(DuplicateEmail, user_duplicate_email_handler)
     app.add_exception_handler(NotExistEmail, not_exist_email_handler)
     app.add_exception_handler(BadCredentials, bad_credentials_handler)
+    app.add_exception_handler(DuplicateTechCategoryName, user_duplicate_tech_category_name_handler)
 
     # routers
     app.include_router(home.router)
     app.include_router(user.router)
     app.include_router(auth.router)
+    app.include_router(tech_category.router)
 
     return app
 
