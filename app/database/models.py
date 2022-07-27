@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.database.database import Base
@@ -38,6 +38,9 @@ class TechCategoryEntity(Base):
     datetime_of_created = Column(DateTime(timezone=True), default=datetime.utcnow)
     datetime_of_updated = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    def update(self, name: str):
+        self.name = name
+
 
 class TechStackEntity(Base):
     __tablename__ = 'tech_stack'
@@ -51,3 +54,6 @@ class TechStackEntity(Base):
 
     datetime_of_created = Column(DateTime(timezone=True), default=datetime.utcnow)
     datetime_of_updated = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def update(self, name: str):
+        self.name = name

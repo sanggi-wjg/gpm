@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_config_settings
 from app.database.database import get_db
 from app.exceptions.user_exception import BadCredentials, NotExistEmail
-from app.repositories import user_repo
+from app.service import user_service
 from app.routers import RouterTags
 from app.schemas.auth_schema import Token, TokenData
 from app.utils.auth_utils import verify_password, create_jwt_access_token
@@ -30,7 +30,7 @@ async def verify_current_user(token: str = Depends(oauth2_scheme), db: Session =
     except JWTError:
         raise BadCredentials()
 
-    find_user = user_repo.find_user_by_email(db, token_data.user_email)
+    find_user = user_service.find_user_by_email(db, token_data.user_email)
     if not find_user:
         raise BadCredentials()
     return find_user
@@ -38,7 +38,7 @@ async def verify_current_user(token: str = Depends(oauth2_scheme), db: Session =
 
 @router.post("/login", response_model=Token)
 async def login_for_jwt_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    find_user = user_repo.find_user_by_email(db, form_data.username)
+    find_user = user_service.find_user_by_email(db, form_data.username)
     if not find_user:
         raise NotExistEmail(form_data.username)
     if not verify_password(form_data.password, find_user.hashed_password):
