@@ -19,7 +19,7 @@ def create_database_engine():
             )
         case "SQLITE":
             database_dsn = "sqlite:///:memory:"
-            return create_engine(database_dsn)
+            return create_engine(database_dsn, connect_args={"check_same_thread": False})
         case _:
             raise Exception(f"check database dsn:{settings.database_engine}")
 
