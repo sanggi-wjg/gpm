@@ -9,7 +9,7 @@ from app.dependencies.query_depend import page_parameter, PageQueryParameter
 from app.exceptions.exception import NotFound
 from app.exceptions.tech_category_exception import DuplicateTechCategoryName
 from app.routers import RouterTags
-from app.schemas.tech_schema import TechCategory, RegisterTechCategory, TechStack
+from app.schemas.tech_schema import TechCategory, TechCategoryRegister, TechStack, TechStackRegister
 from app.service import tech_service
 
 router = APIRouter(
@@ -21,11 +21,11 @@ router = APIRouter(
 
 @router.get("/tech-categories", response_model=List[TechCategory], status_code=status.HTTP_200_OK)
 async def get_tech_categories(page_param: PageQueryParameter = Depends(page_parameter), db: Session = Depends(get_db)):
-    return tech_service.find_tech_categories_by_paged(db, page_param.offset, page_param.limit)
+    return tech_service.find_tech_category_all_by_paged(db, page_param.offset, page_param.limit)
 
 
 @router.post("/tech-categories", response_model=TechCategory, status_code=status.HTTP_201_CREATED)
-async def create_new_tech_category(tech_category: RegisterTechCategory, db: Session = Depends(get_db)):
+async def create_tech_category(tech_category: TechCategoryRegister, db: Session = Depends(get_db)):
     find_tech_category = tech_service.find_tech_category_by_name(db, tech_category.name)
     if find_tech_category:
         raise DuplicateTechCategoryName(tech_category.name)
@@ -42,7 +42,7 @@ async def get_tech_category(tech_category_id: int, db: Session = Depends(get_db)
 
 @router.put("/tech-categories/{tech_category_id}", response_model=TechCategory, status_code=status.HTTP_200_OK)
 async def change_tech_category(tech_category_id: int,
-                               tech_category: RegisterTechCategory,
+                               tech_category: TechCategoryRegister,
                                db: Session = Depends(get_db)):
     return tech_service.update_tech_category(db, tech_category_id, tech_category)
 
@@ -52,6 +52,15 @@ async def remove_tech_category(tech_category_id: int, db: Session = Depends(get_
     tech_service.delete_tech_category(db, tech_category_id)
 
 
-@router.get("/tech-stacks", response_model=List[TechStack], status_code=status.HTTP_200_OK)
-async def get_tech_stacks(page_param: PageQueryParameter = Depends(page_parameter), db: Session = Depends(get_db)):
-    return tech_service.find_tech_stacks_by_paged(db, page_param.offset, page_param.limit)
+@router.get("/tech-categories/{tech_category_id}/tech-stacks", response_model=List[TechStack],
+            status_code=status.HTTP_200_OK)
+async def get_tech_stacks(tech_category_id: int,
+                          page_param: PageQueryParameter = Depends(page_parameter),
+                          db: Session = Depends(get_db)):
+    return tech_service.find_tech_stack_all_by_paged(db, tech_category_id, page_param.offset, page_param.limit)
+
+
+@router.post("/tech-categories/{tech_category_id}/tech-stacks", response_model=TechStack,
+             status_code=status.HTTP_201_CREATED)
+async def create_tech_stack(tech_category_id: int, tech_stack: TechStackRegister, db: Session = Depends(get_db)):
+    return tech_service.create_tech_stack(db, tech_category_id, tech_stack)

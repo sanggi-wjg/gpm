@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from app.service import user_service
-from app.schemas.user_schema import User, RegisterUser
+from app.schemas.user_schema import User, UserRegister
 
 
 class TestUserRepo:
@@ -14,7 +14,7 @@ class TestUserRepo:
         pass
 
     def test_create_new_user(self, test_db: Session):
-        register_user = RegisterUser(
+        register_user = UserRegister(
             email="test@host.com",
             password1="123",
             password2="123"
@@ -35,7 +35,7 @@ class TestUserRouter:
 
     def test_post_users(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers):
         # given
-        register_user = RegisterUser(
+        register_user = UserRegister(
             email="test@host.com",
             password1="123",
             password2="123",
