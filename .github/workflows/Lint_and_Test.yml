@@ -4,9 +4,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  CONFIG_ENV: .env.test
-
 jobs:
   lint:
     runs-on: ubuntu-20.04
@@ -28,7 +25,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: lint
     env:
-      DATABASE_ENGINE: sqlite
+      CONFIG_ENV: .env.test
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.10
