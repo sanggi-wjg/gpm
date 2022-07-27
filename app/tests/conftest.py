@@ -6,8 +6,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from starlette.testclient import TestClient
 
+from app.core.config import get_config_settings
 from app.database.database import Base, get_db
 from app.main import create_app
+from app.tests.utils.test_utils import get_access_token_for_test
 
 """
 https://github.com/timhughes/example-fastapi-sqlachemy-pytest/blob/master/tests/conftest.py
@@ -18,6 +20,7 @@ engine = create_engine(
     connect_args={"check_same_thread": False}
 )
 testingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+settings = get_config_settings()
 
 
 @pytest.fixture(autouse=True)
@@ -47,3 +50,8 @@ def client(app: FastAPI, test_db: Session) -> Generator[TestClient, Any, None]:
     app.dependency_overrides[get_db] = _get_test_db
     with TestClient(app) as client:
         yield client
+
+
+@pytest.fixture
+def access_token_headers(client: TestClient, test_db: Session):
+    return get_access_token_for_test(client, test_db, settings.test_user_email, settings.test_user_password)

@@ -4,10 +4,12 @@ import uvicorn
 from fastapi import FastAPI
 
 from app.core.config import get_config_settings
-from app.core.exceptions.user_exception import DuplicateEmail, user_duplicate_email_handler
+
 from app.database import models
 from app.database.database import Engine
-from app.routers import home, user
+from app.exceptions.user_exception import bad_credentials_handler, NotExistEmail, BadCredentials, \
+    not_exist_email_handler, user_duplicate_email_handler, DuplicateEmail
+from app.routers import home, user, auth
 
 settings = get_config_settings()
 
@@ -28,10 +30,13 @@ def create_app():
 
     # exceptions
     app.add_exception_handler(DuplicateEmail, user_duplicate_email_handler)
+    app.add_exception_handler(NotExistEmail, not_exist_email_handler)
+    app.add_exception_handler(BadCredentials, bad_credentials_handler)
 
     # routers
     app.include_router(home.router)
     app.include_router(user.router)
+    app.include_router(auth.router)
 
     return app
 

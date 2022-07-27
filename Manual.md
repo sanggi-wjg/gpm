@@ -2,15 +2,27 @@
 
 ## 페이지
 ### 관리자 페이지
+1. GitHub 사용자 ID 입력
+   * 프로젝트 철학(?)도 같이
+2. 자기 소개 입력
+   * Blog, Instagram 등도 아이디만 입력되면 되게
+3. GitHub Stat 출력
+4. Tech Stack 선택 
 
 ### 사용자 페이지
-
+* User는 관리자만 할당
+* 관리자만 Tech Category, Stack 등 접근 및 제어 가능 
+* 
 
 ## ERD
 
 ## TODO:
 * [ ] GitHub Action Lint & Test workflow 작성
-* [ ] sqlalchemy.exc.IntegrityError 핸들
+* [ ] JWT 구현
+* [ ] Redis cache 적용
+* [ ] GitHub REST API 연동 구현
+  * https://docs.github.com/en/rest/overview/resources-in-the-rest-api#schema
+* [ ] sqlalchemy.exc.IntegrityError Handle 구현
 
 
 ---
@@ -26,10 +38,13 @@ create '.flake8' file
 flake8 .
 ```
 
-### pytest Coverage
+### pytest and coverage
 ```shell
 # Install package
-pip install pytest-cov coverage coverage-badge
+pip install pytest pytest-cov coverage coverage-badge
+
+# pytest
+pytest .
 
 # coverage
 coverage run -m pytest app/tests/ 

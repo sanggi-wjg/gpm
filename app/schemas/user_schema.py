@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, validator, PositiveInt
 
-from app.core.auth.auth_utils import hash_password
+from app.utils.auth_utils import hash_password
 from app.database.models import UserStatus
 
 

@@ -28,11 +28,14 @@ class Settings(BaseSettings):
     reload: bool = False
     port: int = 9001
 
+    test_user_email="test@example.com"
+    test_user_password="passw0rd"
+
     host: str
     cors_origins: list
     trust_host: list
     secret_key: str
-    algorithm: str
+    access_token_algorithm: str
     access_token_expire_minutes: int
 
     gzip_minimum_size: int
