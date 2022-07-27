@@ -28,8 +28,8 @@ class Settings(BaseSettings):
     reload: bool = False
     port: int = 9001
 
-    test_user_email:str = "test@example.com"
-    test_user_password:str = "passw0rd"
+    test_user_email: str = "test@example.com"
+    test_user_password: str = "passw0rd"
 
     host: str
     cors_origins: list
