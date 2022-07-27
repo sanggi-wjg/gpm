@@ -1,4 +1,6 @@
 ![Coverage](coverage.svg)
+[![Lint and Test](https://github.com/sanggi-wjg/gpm/actions/workflows/Lint_and_Test.yml/badge.svg)](https://github.com/sanggi-wjg/gpm/actions/workflows/Lint_and_Test.yml)
+
 
 # GPM
 GitHub Profile Maker

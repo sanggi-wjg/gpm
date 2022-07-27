@@ -2,12 +2,12 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from app.database.models import TechCategoryEntity
+from app.database.models import TechCategoryEntity, TechStackEntity
 from app.exceptions.exception import NotFound
-from app.schemas.tech_category_schema import RegisterTechCategory
+from app.schemas.tech_schema import RegisterTechCategory
 
 
-def find_users_by_paged(db: Session, offset: int, limit: int) -> List[TechCategoryEntity]:
+def find_tech_categories_by_paged(db: Session, offset: int, limit: int) -> List[TechCategoryEntity]:
     return db.query(TechCategoryEntity).offset(offset).limit(limit).all()
 
 
@@ -47,3 +47,7 @@ def delete_tech_category(db: Session, tech_category_id: int):
     db.delete(find_tech_category)
     db.commit()
     return True
+
+
+def find_tech_stacks_by_paged(db: Session, offset: int, limit: int) -> List[TechStackEntity]:
+    return db.query(TechStackEntity).offset(offset).limit(limit).all()
