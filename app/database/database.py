@@ -17,9 +17,9 @@ def create_database_engine():
                 max_overflow=200,
                 echo=False
             )
-        # case "SQLITE":
-        #     database_dsn = "sqlite:///:memory:"
-        #     return create_engine(database_dsn)
+        case "SQLITE":
+            database_dsn = "sqlite:///:memory:"
+            return create_engine(database_dsn)
         case _:
             raise Exception(f"check database dsn:{settings.database_engine}")
 
