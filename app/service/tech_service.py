@@ -19,6 +19,14 @@ def find_tech_category_by_id(db: Session, tech_category_id: int) -> TechCategory
     return db.query(TechCategoryEntity).filter(TechCategoryEntity.id == tech_category_id).first()
 
 
+def find_or_create_tech_category_by_name(db: Session, tech_category: TechCategoryRegister) -> TechCategoryEntity:
+    find_tech_category = find_tech_category_by_name(db, tech_category.name)
+    if find_tech_category:
+        return find_tech_category
+    else:
+        return create_tech_category(db, tech_category)
+
+
 def create_tech_category(db: Session, tech_category: TechCategoryRegister) -> TechCategoryEntity:
     new_tech_category = TechCategoryEntity(name=tech_category.name)
     db.add(new_tech_category)
