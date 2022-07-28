@@ -1,7 +1,6 @@
 ![Coverage](coverage.svg)
 [![Lint and Test](https://github.com/sanggi-wjg/gpm/actions/workflows/Lint_and_Test.yml/badge.svg)](https://github.com/sanggi-wjg/gpm/actions/workflows/Lint_and_Test.yml)
 
-
 # GPM
 ### GitHub Profile Maker
 It helps you to make your GitHub profile. If you do not have the profile, try this.
@@ -14,14 +13,16 @@ PyDantic (https://pydantic-docs.helpmanual.io/)
 Starlette (https://www.starlette.io/)
 ```
 
+## App Screenshot
+![](media/intro.png)
+
 ## How to use own yourself
 ### 1. Clone this repository.
-Create Virtual Env whatever you want,
-then install packages with requirements.txt
+Create Virtual Env whatever you want, then install packages with requirements.txt
 
 ### 2. Create `.env` file to use for app.
-App load the configurations from `.env` file.
-Please refer to the code below.
+App load the configurations from `.env` file. Please refer to the code below.
+
 ```python
 filepath = os.path.join(base, "config", environ.get('CONFIG_ENV', '.env.local'))
 ```
@@ -67,7 +68,33 @@ MYSQL_HOST=1.2.3.4
 MYSQL_PORT=3
 MYSQL_DB_NAME=4
 ```
-### 3. Execute app/main.py
 
-## App Screenshot
-![](media/intro.png)
+## Commands
+### Create User
+```shell
+python app/commands/managements/create_user.py -email jayg@nhn-commerce.com -password passw0rd
+
+START Command: Create user
+new_user(jayg@nhn-commerce.com) created
+FINISH Command
+```
+
+### Create Techs
+```shell
+python app/commands/managements/create_techs.py
+
+START Command: Create tech categories and stacks
+Create Programming Language or not
+Create Python or not
+Create Java or not
+Create PHP or not
+
+...
+
+Create OracleDB or not
+Create MsSQL or not
+Create Cubrid or not
+FINISH Command
+```
+
+### 4. Execute app/main.py

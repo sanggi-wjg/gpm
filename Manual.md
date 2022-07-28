@@ -17,16 +17,6 @@
 
 ## ERD
 
-## Commands 
-### Create User
-```shell
-python app/commands/managements/create_user.py -email jayg@nhn-commerce.com -password passw0rd
-
-START Command: Create user
-new_user(jayg@nhn-commerce.com) created
-FINISH Command
-```
-
 
 ## TODO:
 * [X] GitHub Action Lint & Test workflow 작성
