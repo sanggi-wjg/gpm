@@ -12,7 +12,8 @@ function show_tech_stacks(tech_categories) {
             html += `<button type="button" class="btn bg-gradient-light w-auto me-2 btn-tech-stack"
                             onclick="choose_tech_stacks($(this))"
                             data-user-choose="0"
-                            data-stack-name="${stack.name}">${stack.name}</button>`
+                            data-teck_category-id="${stack.tech_category_id}"
+                            data-teck_stack-name="${stack.name}">${stack.name}</button>`
         });
         // console.log("=============");
     });
@@ -34,17 +35,33 @@ function choose_tech_stacks(btn_teck_stack) {
     }
 }
 
-const UserMarkdownCreateForm = {
-    user_github_name: '',
-    user_introduction: '',
-    user_socials: [],
-    user_tech_stacks: [],
+
+function get_user_socials() {
+    let social_sites = [
+        $("#social_tistory"),
+        $("#social_github"),
+        $("#social_naver_blog"),
+        $("#social_instagram")
+    ];
+
+    let user_socials = [];
+    $.each(social_sites, function (_, site) {
+        user_socials.push({
+            site_name: site.parent().children('label').text(),
+            site_url: site.parent().children('span').text(),
+            site_user_name: site.val(),
+        })
+    });
+    return user_socials;
 }
 
 function save_markdown() {
-    UserMarkdownCreateForm.user_github_name = $("#user_github_name").val();
-    UserMarkdownCreateForm.user_introduction = $("#user_introduction").val();
-    // console.log(UserMarkdownCreateForm);
+    const UserMarkdownCreateForm = {
+        user_github_name: $("#user_github_name").val(),
+        user_introduction: $("#user_introduction").val(),
+        user_socials: get_user_socials(),
+        user_tech_stacks: [],
+    }
 
     $.ajax({
         method: "POST",
@@ -82,7 +99,6 @@ function save_markdown() {
         } else {
             window.location.href = downloadUrl;
         }
-
     }).fail(function (xhr, status, errorThrown) {
         alert("fail to download markdown");
     });

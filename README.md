@@ -16,6 +16,8 @@ Starlette (https://www.starlette.io/)
 
 ## How to use own yourself
 ### 1. Clone this repository.
+Create Virtual Env whatever you want,
+then install packages with requirements.txt
 
 ### 2. Create `.env` file to use for app.
 App load the configurations from `.env` file.

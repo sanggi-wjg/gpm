@@ -32,11 +32,13 @@ class TestTechCategoryRouter:
         response = client.get(self.url)
         assert response.status_code == status.HTTP_200_OK
 
-    def test_post_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient):
+    def test_post_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers):
         # given
         category_name = "Programming Language"
         # when
-        response = client.post(self.url, json=jsonable_encoder(TechCategoryRegister(name=category_name)))
+        response = client.post(self.url,
+                               json=jsonable_encoder(TechCategoryRegister(name=category_name)),
+                               headers=access_token_headers)
         data = response.json()
         tech_category = TechCategory(**data)
         # then
@@ -48,25 +50,29 @@ class TestTechCategoryRouter:
 
 class TestTechCategoryDetailRouter:
 
-    def get_url(self, client: TestClient):
+    def get_url(self, client: TestClient, access_token_headers):
         url = "/api/v1/tech-categories"
 
-        response = client.post(url, json=jsonable_encoder(TechCategoryRegister(name="Programming Language")))
+        response = client.post(url,
+                               json=jsonable_encoder(TechCategoryRegister(name="Programming Language")),
+                               headers=access_token_headers)
         tech_category = TechCategory(**response.json())
         assert response.status_code == status.HTTP_201_CREATED
         assert tech_category.id == 1
 
         return f"{url}/{tech_category.id}"
 
-    def test_get_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient):
-        response = client.get(self.get_url(client))
+    def test_get_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers):
+        response = client.get(self.get_url(client, access_token_headers))
         assert response.status_code == status.HTTP_200_OK
 
-    def test_put_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient):
+    def test_put_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers):
         # given
         change_name = "Framework"
         # when
-        response = client.put(self.get_url(client), json=jsonable_encoder(TechCategoryRegister(name=change_name)))
+        response = client.put(self.get_url(client, access_token_headers),
+                              json=jsonable_encoder(TechCategoryRegister(name=change_name)),
+                              headers=access_token_headers)
         tech_category = TechCategory(**response.json())
         find_tech_category = tech_service.find_tech_category_by_id(test_db, 1)
         # then
@@ -74,10 +80,10 @@ class TestTechCategoryDetailRouter:
         assert tech_category.name == change_name
         assert find_tech_category.name == change_name
 
-    def test_delete_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient):
+    def test_delete_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers):
         # given
         # when
-        response = client.delete(self.get_url(client))
+        response = client.delete(self.get_url(client, access_token_headers), headers=access_token_headers)
         find_tech_category = tech_service.find_tech_category_by_id(test_db, 1)
         # then
         assert response.status_code == status.HTTP_204_NO_CONTENT
