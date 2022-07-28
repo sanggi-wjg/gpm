@@ -4,31 +4,36 @@ from typing import List
 from pydantic import BaseModel, PositiveInt
 
 
-class TechStackRegister(BaseModel):
-    name: str
-
-
-class TechStack(TechStackRegister):
+class TechStackBase(BaseModel):
     id: PositiveInt
     name: str
     datetime_of_created: datetime
     datetime_of_updated: datetime
 
-    # tech_category: 'TechCategory' = None
+
+class TechStackRegister(BaseModel):
+    name: str
+
+
+class TechStack(TechStackBase):
+    tech_category_id: PositiveInt
 
     class Config:
         orm_mode = True
+
+
+class TechCategoryBase(BaseModel):
+    id: PositiveInt
+    name: str
+    datetime_of_created: datetime
+    datetime_of_updated: datetime
 
 
 class TechCategoryRegister(BaseModel):
     name: str
 
 
-class TechCategory(TechCategoryRegister):
-    id: PositiveInt
-    name: str
-    datetime_of_created: datetime
-    datetime_of_updated: datetime
+class TechCategory(TechCategoryBase):
     tech_stacks: List[TechStack] = []
 
     class Config:

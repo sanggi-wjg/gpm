@@ -5,4 +5,5 @@ class RouterTags(str, Enum):
     Home = "Home"
     Auth = "Auth"
     User = "Users"
-    Tech = "Tech"
+    Tech = "Techs"
+    Markdown = "Markdowns"

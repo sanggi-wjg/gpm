@@ -6,11 +6,11 @@ from app.utils.auth_utils import hash_password
 from app.database.models import UserStatus
 
 
-class BaseUser(BaseModel):
+class UserBase(BaseModel):
     email: EmailStr
 
 
-class UserRegister(BaseUser):
+class UserRegister(UserBase):
     password1: str
     password2: str
 
@@ -25,7 +25,7 @@ class UserRegister(BaseUser):
         return v
 
 
-class User(BaseUser):
+class User(UserBase):
     id: PositiveInt
     status: UserStatus
     datetime_of_created: datetime

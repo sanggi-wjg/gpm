@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% include 'fragments/head.html' %}
+{% include 'fragments/header.html' %}
 
-</body>
-</html>
+<div class="card card-body shadow-xl mx-3 mx-md-4 mt-n6">
+    {% include 'input_page/first.html' %}
+    {% include 'input_page/second.html' %}
+    {% include 'input_page/third.html' %}
+    {% include 'input_page/fourth.html' %}
+    {% include 'input_page/final.html' %}
+</div>
+
+{% include 'fragments/footer.html' %}

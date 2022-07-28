@@ -1,0 +1,107 @@
+function show_tech_stacks(tech_categories) {
+    let html = `<div class="row justify-space-between py-2">`;
+    // tech categories
+    $.each(tech_categories, function (_, category) {
+        // console.log(category);
+        html += `<div class="info">
+                    <h5 class="text-white">${category.name}</h5>
+                 </div>`
+        // tech stacks
+        $.each(category.tech_stacks, function (_, stack) {
+            // console.log(stack);
+            html += `<button type="button" class="btn bg-gradient-light w-auto me-2 btn-tech-stack"
+                            onclick="choose_tech_stacks($(this))"
+                            data-user-choose="0"
+                            data-stack-name="${stack.name}">${stack.name}</button>`
+        });
+        // console.log("=============");
+    });
+    html += '</div>';
+    // print
+    const tech_stack = $("#tech_stack");
+    tech_stack.append(html)
+}
+
+function choose_tech_stacks(btn_teck_stack) {
+    // $(".btn-tech-stack").click(function () {
+    console.log(btn_teck_stack);
+    if (btn_teck_stack.attr("data-user-choose") === "0") {
+        btn_teck_stack.attr("class", "btn bg-gradient-primary w-auto me-2 btn-tech-stack");
+        btn_teck_stack.attr("data-user-choose", "1");
+    } else {
+        btn_teck_stack.attr("class", "btn bg-gradient-light w-auto me-2 btn-tech-stack");
+        btn_teck_stack.attr("data-user-choose", "0");
+    }
+}
+
+const UserMarkdownCreateForm = {
+    user_github_name: '',
+    user_introduction: '',
+    user_socials: [],
+    user_tech_stacks: [],
+}
+
+function save_markdown() {
+    UserMarkdownCreateForm.user_github_name = $("#user_github_name").val();
+    UserMarkdownCreateForm.user_introduction = $("#user_introduction").val();
+    // console.log(UserMarkdownCreateForm);
+
+    $.ajax({
+        method: "POST",
+        url: "/api/v1/markdowns",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(UserMarkdownCreateForm),
+        xhrFields: {
+            responseType: "blob",
+        },
+    }).done(function (blob, status, xhr) {
+        console.log(blob, status, xhr);
+        let fileName = "";
+        const disposition = xhr.getResponseHeader("Content-Disposition");
+
+        if (disposition && disposition.indexOf("attachment") !== -1) {
+            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) {
+                fileName = decodeURI(matches[1].replace(/['"]/g, ""));
+            }
+        }
+        const URL = window.URL || window.webkitURL;
+        const downloadUrl = URL.createObjectURL(blob);
+
+        if (fileName) {
+            const a = document.createElement("a");
+            if (a.download === undefined) {
+                window.location.href = downloadUrl;
+            } else {
+                a.href = downloadUrl;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+            }
+        } else {
+            window.location.href = downloadUrl;
+        }
+
+    }).fail(function (xhr, status, errorThrown) {
+        alert("fail to download markdown");
+    });
+}
+
+$(document).ready(function () {
+    const user_introduction = document.getElementById("user_introduction");
+    user_introduction.value = `👍 Python 백엔드 개발자에요
+🌱 Backend 개발에 대해서 공부하고 있어요
+✨ FastAPI 같은 최신 기술에 관심 있어요
+🤝 같이 미니 프로젝트 참여하실 분을 찾고 있어요`;
+
+    $.ajax({
+        method: "GET",
+        url: "/api/v1/tech-categories",
+        dataType: "json",
+    }).done(function (response_json) {
+        show_tech_stacks(response_json);
+    }).fail(function (xhr, status, errorThrown) {
+        $("#tech_stack").append(`<div class="alert alert-danger" role="alert"><strong>failed fetch tech category</div>`)
+    });
+});
