@@ -16,7 +16,7 @@ from app.exceptions.user_exception import (
     bad_credentials_handler, NotExistEmail, BadCredentials,
     not_exist_email_handler, user_duplicate_email_handler, DuplicateEmail
 )
-from app.routers import home, user, auth, tech
+from app.routers import home, user, auth, tech, markdown
 
 settings = get_config_settings()
 
@@ -50,6 +50,7 @@ def create_app():
     app.include_router(user.router)
     app.include_router(auth.router)
     app.include_router(tech.router)
+    app.include_router(markdown.router)
 
     return app
 
