@@ -2,6 +2,7 @@ import logging
 
 import uvicorn
 from fastapi import FastAPI
+from starlette.staticfiles import StaticFiles
 
 from app.core.config import get_config_settings
 
@@ -27,6 +28,9 @@ def create_app():
         description=settings.app_desc,
         contact=dict(name=settings.app_admin_name, ),
     )
+
+    # static
+    app.mount("/static", StaticFiles(directory=settings.static_root), name="static")
 
     # simple way to create database
     if settings.debug:
