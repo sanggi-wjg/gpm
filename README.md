@@ -11,6 +11,10 @@ Python 3.10
 FastAPI (https://fastapi.tiangolo.com/)
 PyDantic (https://pydantic-docs.helpmanual.io/)
 Starlette (https://www.starlette.io/)
+SqlAlchemy (https://www.sqlalchemy.org/)
+
+GitHub API (https://docs.github.com/en/rest/overview/resources-in-the-rest-api)
+Shield Badge (https://shields.io/)
 ```
 
 ## App Screenshot
