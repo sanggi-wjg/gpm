@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.dependencies.query_depend import PageQueryParameter, page_parameter
-from app.exceptions.user_exception import DuplicateEmail
+from app.exceptions.exception import DuplicateError
 from app.database.database import get_db
 
 from app.routers import RouterTags
@@ -32,6 +32,6 @@ async def create_user(user: UserRegister,
                       db: Session = Depends(get_db)):
     find_user = user_service.find_user_by_email(db, user.email)
     if find_user:
-        raise DuplicateEmail(user.email)
+        raise DuplicateError(user.email)
 
     return user_service.create_user(db, user)

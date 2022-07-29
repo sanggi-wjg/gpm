@@ -6,18 +6,6 @@ class UserException(Exception):
     pass
 
 
-class DuplicateEmail(UserException):
-    def __init__(self, email: str):
-        self.email = email
-
-
-async def user_duplicate_email_handler(request: Request, e: DuplicateEmail):
-    return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content={"detail": f"{e.email} is duplicated"}
-    )
-
-
 class NotExistEmail(UserException):
 
     def __init__(self, email):

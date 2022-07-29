@@ -14,7 +14,7 @@ Starlette (https://www.starlette.io/)
 ```
 
 ## App Screenshot
-![](media/screenshot.png)
+![](media/app_screenshot.png)
 
 ## How to use own yourself
 ### 1. Clone this repository.

@@ -1,0 +1,2 @@
+class TechCategoryException(Exception):
+    pass

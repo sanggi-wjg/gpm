@@ -6,8 +6,7 @@ from starlette import status
 
 from app.database.database import get_db
 from app.dependencies.query_depend import page_parameter, PageQueryParameter
-from app.exceptions.exception import NotFound
-from app.exceptions.tech_category_exception import DuplicateTechCategoryName
+from app.exceptions.exception import NotFound, DuplicateError
 from app.routers import RouterTags
 from app.routers.auth import verify_current_user
 from app.schemas.tech_schema import TechCategory, TechCategoryRegister, TechStack, TechStackRegister
@@ -32,7 +31,7 @@ async def create_tech_category(tech_category: TechCategoryRegister,
                                db: Session = Depends(get_db)):
     find_tech_category = tech_service.find_tech_category_by_name(db, tech_category.name)
     if find_tech_category:
-        raise DuplicateTechCategoryName(tech_category.name)
+        raise DuplicateError(tech_category.name)
     return tech_service.create_tech_category(db, tech_category)
 
 

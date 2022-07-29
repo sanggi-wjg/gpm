@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath('.'))
 
 from app.service import tech_service
 from app.service.tech_service import find_or_create_tech_category_by_name
+from app.exceptions.exception import DuplicateError
 from app.schemas.tech_schema import TechCategoryRegister, TechStackRegister
 from app.commands.managements.base_command import BaseCommand
 
@@ -32,8 +33,11 @@ class CreateTechCommand(BaseCommand):
         self.info(f"Create {tech_category.name} or not")
 
         for tech_stack in tech_stack_registers:
-            tech_service.create_tech_stack(self.db, tech_category.id, tech_stack)
-            self.debug(f"Create {tech_stack.name} or not")
+            try:
+                tech_service.create_tech_stack(self.db, tech_category.id, tech_stack)
+                self.debug(f"Create {tech_stack.name}")
+            except DuplicateError:
+                self.warning(f"{tech_stack.name} is exist")
 
 
 def get_programming_languages() -> Tuple[TechCategoryRegister, List[TechStackRegister]]:
@@ -43,7 +47,6 @@ def get_programming_languages() -> Tuple[TechCategoryRegister, List[TechStackReg
         TechStackRegister(name="PHP"),
         TechStackRegister(name="C"),
         TechStackRegister(name="C++"),
-        TechStackRegister(name="C#"),
         TechStackRegister(name="C#"),
         TechStackRegister(name="Crystal"),
         TechStackRegister(name="Dart"),

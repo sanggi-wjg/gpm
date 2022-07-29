@@ -8,13 +8,11 @@ from app.core.config import get_config_settings
 
 from app.database import models
 from app.database.database import Engine
-from app.exceptions.exception import not_found_handler, NotFound
-from app.exceptions.tech_category_exception import (
-    DuplicateTechCategoryName, duplicate_tech_category_name_handler
+from app.exceptions.exception import (
+    not_found_handler, NotFound, DuplicateError, duplicate_error_handler
 )
 from app.exceptions.user_exception import (
-    bad_credentials_handler, NotExistEmail, BadCredentials,
-    not_exist_email_handler, user_duplicate_email_handler, DuplicateEmail
+    bad_credentials_handler, NotExistEmail, BadCredentials, not_exist_email_handler
 )
 from app.routers import home, user, auth, tech, markdown
 
@@ -40,10 +38,9 @@ def create_app():
 
     # exceptions
     app.add_exception_handler(NotFound, not_found_handler)
-    app.add_exception_handler(DuplicateEmail, user_duplicate_email_handler)
     app.add_exception_handler(NotExistEmail, not_exist_email_handler)
     app.add_exception_handler(BadCredentials, bad_credentials_handler)
-    app.add_exception_handler(DuplicateTechCategoryName, duplicate_tech_category_name_handler)
+    app.add_exception_handler(DuplicateError, duplicate_error_handler)
 
     # routers
     app.include_router(home.router)

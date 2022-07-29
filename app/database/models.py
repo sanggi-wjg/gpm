@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from app.database.database import Base
@@ -44,9 +44,9 @@ class TechCategoryEntity(Base):
 
 class TechStackEntity(Base):
     __tablename__ = 'tech_stack'
-    # __table_args__ = (
-    #     UniqueConstraint('tech_category_id', 'name', name='unique_tech_stack_name_by_tech_category_id'),
-    # )
+    __table_args__ = (
+        UniqueConstraint('tech_category_id', 'name', name='unique_tech_stack_name_by_tech_category_id'),
+    )
 
     id = Column(Integer, primary_key=True, autoincrement="auto", index=True)
     name = Column(String(50), nullable=False, index=True)

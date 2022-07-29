@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from app.database.models import TechCategoryEntity, TechStackEntity
-from app.exceptions.exception import NotFound
+from app.exceptions.exception import NotFound, DuplicateError
 from app.schemas.tech_schema import TechStackRegister, TechCategoryRegister
 
 
@@ -65,10 +65,17 @@ def find_tech_stack_all_by_paged(db: Session, tech_category_id: int, offset: int
     ).offset(offset).limit(limit).all()
 
 
+def find_tech_stack_by_name(db: Session, name: str) -> TechStackEntity:
+    return db.query(TechStackEntity).filter(TechStackEntity.name == name).first()
+
+
 def create_tech_stack(db: Session, tech_category_id: int, tech_stack: TechStackRegister):
     find_tech_category = find_tech_category_by_id_or_not_found(db, tech_category_id)
-    new_tech_stack = TechStackEntity(name=tech_stack.name, tech_category_id=find_tech_category.id)
+    find_tech_stack = find_tech_stack_by_name(db, tech_stack.name)
+    if find_tech_stack:
+        raise DuplicateError(tech_stack.name)
 
+    new_tech_stack = TechStackEntity(name=tech_stack.name, tech_category_id=find_tech_category.id)
     db.add(new_tech_stack)
     db.commit()
     db.refresh(new_tech_stack)
