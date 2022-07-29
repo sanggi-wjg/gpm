@@ -12,8 +12,9 @@ function show_tech_stacks(tech_categories) {
             html += `<button type="button" class="btn bg-gradient-light w-auto me-2 btn-tech-stack"
                             onclick="choose_tech_stacks($(this))"
                             data-user-choose="0"
-                            data-teck_category-id="${stack.tech_category_id}"
-                            data-teck_stack-name="${stack.name}">${stack.name}</button>`
+                            data-tech-category-id="${stack.tech_category_id}"
+                            data-tech-category-name="${category.name}"
+                            data-tech-stack-name="${stack.name}">${stack.name}</button>`
         });
         // console.log("=============");
     });
@@ -25,7 +26,7 @@ function show_tech_stacks(tech_categories) {
 
 function choose_tech_stacks(btn_teck_stack) {
     // $(".btn-tech-stack").click(function () {
-    console.log(btn_teck_stack);
+    // console.log(btn_teck_stack);
     if (btn_teck_stack.attr("data-user-choose") === "0") {
         btn_teck_stack.attr("class", "btn bg-gradient-primary w-auto me-2 btn-tech-stack");
         btn_teck_stack.attr("data-user-choose", "1");
@@ -44,15 +45,28 @@ function get_user_socials() {
         $("#social_instagram")
     ];
 
-    let user_socials = [];
+    let socials = [];
     $.each(social_sites, function (_, site) {
-        user_socials.push({
-            site_name: site.parent().children('label').text(),
-            site_url: site.parent().children('span').text(),
-            site_user_name: site.val(),
-        })
+        if (site.val() !== '') {
+            socials.push({
+                site_name: site.parent().children('label').text(),
+                site_url: site.parent().children('span').text(),
+                site_user_name: site.val(),
+            })
+        }
     });
-    return user_socials;
+    return socials;
+}
+
+function get_techs() {
+    let techs = [];
+    $(".btn-tech-stack[data-user-choose=1]").each(function (_, btn) {
+        techs.push({
+            tech_category_name: $(this).attr('data-tech-category-name'),
+            tech_stack_name: $(this).attr('data-tech-stack-name')
+        })
+    })
+    return techs;
 }
 
 function save_markdown() {
@@ -60,8 +74,12 @@ function save_markdown() {
         user_github_name: $("#user_github_name").val(),
         user_introduction: $("#user_introduction").val(),
         user_socials: get_user_socials(),
-        user_tech_stacks: [],
+        user_techs: get_techs(),
     }
+    if (UserMarkdownCreateForm.user_github_name === "") {
+
+    }
+    console.log(UserMarkdownCreateForm)
 
     $.ajax({
         method: "POST",
