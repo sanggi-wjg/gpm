@@ -79,7 +79,10 @@ def create_tech_stack(db: Session, tech_category_id: int, tech_stack: TechStackR
     if find_tech_stack:
         raise DuplicateError(tech_stack.name)
 
-    new_tech_stack = TechStackEntity(name=tech_stack.name, tech_category_id=find_tech_category.id)
+    new_tech_stack = TechStackEntity(
+        name=tech_stack.name,
+        tech_category_id=find_tech_category.id
+    )
     db.add(new_tech_stack)
     db.commit()
     db.refresh(new_tech_stack)

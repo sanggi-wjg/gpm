@@ -1,7 +1,8 @@
 import os
 
-from app.schemas.markdown_schema import SocialSite
-from app.service.markdown.converters import convert_hello, convert_introduction, SocialConverter
+from app.schemas.markdown_schema import SocialSite, UserTech
+from app.service.markdown.converters import convert_hello, convert_introduction, SocialConverter, TechConverter, \
+    convert_github
 from app.service.markdown.markdown_converter import get_markdown_save_path, save_markdown
 
 
@@ -28,20 +29,19 @@ class TestMarkdownConverter:
         assert os.path.exists(file_path)
 
     def test_convert_hello(self):
-        # given
         user_name = "Test"
-        # when
         result = convert_hello(user_name)
-        # then
         assert result
         # assert result == f"""# 안녕하세요 [{user_name}](https://github.com/{user_name}) 입니다! <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width=50px>"""
 
     def test_convert_introduction(self):
-        # given
         user_introduction = "Test"
-        # when
         result = convert_introduction(user_introduction)
-        # then
+        assert result
+
+    def test_convert_github(self):
+        user_name = "Test"
+        result = convert_github(user_name)
         assert result
 
     def get_sample_socials(self):
@@ -51,12 +51,21 @@ class TestMarkdownConverter:
         ]
 
     def test_social_converter(self):
-        # given
         converter = SocialConverter()
-
-        # when
         result = converter.convert(self.get_sample_socials())
-        print(result)
+        assert result
 
-        # then
+    def get_sample_user_techs(self):
+        return [
+            UserTech(tech_category_name='Programming Language', tech_stack_name='PHP'),
+            UserTech(tech_category_name='Programming Language', tech_stack_name='Python'),
+            UserTech(tech_category_name='Framework', tech_stack_name='Gin'),
+            UserTech(tech_category_name='Framework', tech_stack_name='SpringBoot'),
+            UserTech(tech_category_name='Database', tech_stack_name='Cubrid'),
+            UserTech(tech_category_name='Database', tech_stack_name='MariaDB')
+        ]
+
+    def test_tech_converters(self):
+        converter = TechConverter()
+        result = converter.convert(self.get_sample_user_techs())
         assert result

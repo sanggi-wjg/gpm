@@ -2,7 +2,10 @@ import os
 
 from app.core.config import get_config_settings
 from app.schemas.markdown_schema import UserMarkdownCreate
-from app.service.markdown.converters import convert_hello, convert_introduction, SocialConverter
+from app.service.markdown.converters import (
+    convert_hello, convert_introduction, SocialConverter, TechConverter,
+    convert_github
+)
 
 
 class MarkdownConverter:
@@ -12,11 +15,15 @@ class MarkdownConverter:
         self.convert_hello = convert_hello
         self.convert_introduction = convert_introduction
         self.social_converter = SocialConverter()
+        self.tech_converter = TechConverter()
+        self.convert_github = convert_github
 
     def convert(self) -> str:
         result = self.convert_hello(self.user_markdown.user_github_name)
         result += self.convert_introduction(self.user_markdown.user_introduction)
         result += self.social_converter.convert(self.user_markdown.user_socials)
+        result += self.tech_converter.convert(self.user_markdown.user_techs)
+        result += self.convert_github(self.user_markdown.user_github_name)
         return result
 
 
