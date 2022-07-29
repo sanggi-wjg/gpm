@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from app.database.models import UserEntity
+from app.exceptions.exception import DuplicateError
 from app.schemas import user_schema
 
 
@@ -19,6 +20,10 @@ def find_user_by_email(db: Session, email: str) -> UserEntity:
 
 
 def create_user(db: Session, user: user_schema.UserRegister) -> UserEntity:
+    find_user = find_user_by_email(db, user.email)
+    if find_user:
+        raise DuplicateError(user.email)
+
     new_user = UserEntity(
         email=user.email,
         hashed_password=user.hashed_password,

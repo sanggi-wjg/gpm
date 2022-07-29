@@ -28,6 +28,10 @@ def find_or_create_tech_category_by_name(db: Session, tech_category: TechCategor
 
 
 def create_tech_category(db: Session, tech_category: TechCategoryRegister) -> TechCategoryEntity:
+    find_tech_category = find_tech_category_by_name(db, tech_category.name)
+    if find_tech_category:
+        raise DuplicateError(tech_category.name)
+
     new_tech_category = TechCategoryEntity(name=tech_category.name)
     db.add(new_tech_category)
     db.commit()
