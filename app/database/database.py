@@ -1,3 +1,4 @@
+import logging
 from typing import Generator
 
 from sqlalchemy import create_engine
@@ -5,9 +6,10 @@ from sqlalchemy.orm import sessionmaker, declarative_base, Session
 
 from app.core.config import get_config_settings
 
+settings = get_config_settings()
+
 
 def create_database_engine():
-    settings = get_config_settings()
     match settings.database_engine:
         case "MYSQL":
             return create_engine(
@@ -27,6 +29,12 @@ def create_database_engine():
 Engine = create_database_engine()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=Engine)
 Base = declarative_base()
+
+# simple way to create database
+if settings.debug:
+    Base.metadata.create_all(bind=Engine)
+    logging.basicConfig()
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 
 def get_db() -> Generator:

@@ -5,7 +5,7 @@ from starlette import status
 from starlette.testclient import TestClient
 
 from app.service import tech_service
-from app.schemas.tech_schema import TechCategory, TechCategoryRegister
+from app.schemas.tech_schema import TechCategory, TechCategoryRegister, TechStackRegister
 
 
 class TestTechCategoryRepo:
@@ -46,6 +46,22 @@ class TestTechCategoryRouter:
         assert tech_category
         assert tech_category.id == 1
         assert tech_category.name == category_name
+
+    def test_post_tech_categories_duplicate(self, app: FastAPI, test_db: Session, client: TestClient,
+                                            access_token_headers):
+        # given
+        category_name = "Programming Language"
+        response = client.post(self.url,
+                               json=jsonable_encoder(TechCategoryRegister(name=category_name)),
+                               headers=access_token_headers)
+        assert response.status_code == status.HTTP_201_CREATED
+        # when
+        category_name = "Programming Language"
+        response = client.post(self.url,
+                               json=jsonable_encoder(TechCategoryRegister(name=category_name)),
+                               headers=access_token_headers)
+        # then
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
 class TestTechCategoryDetailRouter:
@@ -88,3 +104,28 @@ class TestTechCategoryDetailRouter:
         # then
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert not find_tech_category
+
+
+class TestTechStackRouter:
+
+    def get_url(self, client: TestClient, access_token_headers):
+        url = "/api/v1/tech-categories"
+
+        response = client.post(url,
+                               json=jsonable_encoder(TechCategoryRegister(name="Programming Language")),
+                               headers=access_token_headers)
+        tech_category = TechCategory(**response.json())
+        assert response.status_code == status.HTTP_201_CREATED
+        assert tech_category.id == 1
+
+        return f"{url}/{tech_category.id}/tech-stacks"
+
+    def test_post_tech_stacks(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers):
+        # given
+        stack_name = "Python"
+        # when
+        response = client.post(self.get_url(client, access_token_headers),
+                               json=jsonable_encoder(TechStackRegister(name=stack_name)),
+                               headers=access_token_headers)
+        # then
+        assert response.status_code == status.HTTP_201_CREATED

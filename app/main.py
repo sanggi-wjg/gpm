@@ -1,13 +1,9 @@
-import logging
-
 import uvicorn
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
 from app.core.config import get_config_settings
 
-from app.database import models
-from app.database.database import Engine
 from app.exceptions.exception import (
     not_found_handler, NotFound, DuplicateError, duplicate_error_handler
 )
@@ -29,12 +25,6 @@ def create_app():
 
     # static
     app.mount("/static", StaticFiles(directory=settings.static_root), name="static")
-
-    # simple way to create database
-    if settings.debug:
-        models.Base.metadata.create_all(bind=Engine)
-        logging.basicConfig()
-        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
     # exceptions
     app.add_exception_handler(NotFound, not_found_handler)
