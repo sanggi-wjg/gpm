@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel, PositiveInt
@@ -7,8 +6,9 @@ from pydantic import BaseModel, PositiveInt
 class TechStackBase(BaseModel):
     id: PositiveInt
     name: str
-    datetime_of_created: datetime
-    datetime_of_updated: datetime
+    # badge: str
+    # datetime_of_created: datetime
+    # datetime_of_updated: datetime
 
 
 class TechStackRegister(BaseModel):
@@ -25,8 +25,8 @@ class TechStack(TechStackBase):
 class TechCategoryBase(BaseModel):
     id: PositiveInt
     name: str
-    datetime_of_created: datetime
-    datetime_of_updated: datetime
+    # datetime_of_created: datetime
+    # datetime_of_updated: datetime
 
 
 class TechCategoryRegister(BaseModel):

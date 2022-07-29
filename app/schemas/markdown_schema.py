@@ -15,8 +15,13 @@ class SocialSite(BaseModel):
         return v
 
 
+class UserTech(BaseModel):
+    tech_category_name: str
+    tech_stack_name: str
+
+
 class UserMarkdownCreate(BaseModel):
     user_github_name: str
     user_introduction: str | None = None
     user_socials: List[SocialSite] | List[None] = []
-    user_tech_stacks: List[str] | List[None] = []
+    user_techs: List[UserTech] | List[None] = []

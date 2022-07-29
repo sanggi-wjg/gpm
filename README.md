@@ -19,6 +19,7 @@ Shield Badge (https://shields.io/)
 
 ## App Screenshot
 ![](media/app_screenshot.png)
+![](media/my_profile.png)
 
 ## How to use own yourself
 ### 1. Clone this repository.
@@ -30,6 +31,7 @@ App load the configurations from `.env` file. Please refer to the code below.
 ```python
 filepath = os.path.join(base, "config", environ.get('CONFIG_ENV', '.env.local'))
 ```
+
 
 ### For example `.env.local`
 ```dotenv
