@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel, PositiveInt, validator
+from pydantic import BaseModel, PositiveInt
 
 
 class TechStackBase(BaseModel):
