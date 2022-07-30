@@ -68,7 +68,7 @@ class SocialConverter(Converter):
 
 class TechConverter(Converter):
 
-    def map_by_category_name(self, user_tech: List[UserTech]) -> dict:
+        def map_by_category_name(self, user_tech: List[UserTech]) -> dict:
         badges = {}
         for tech in user_tech:
             category_name = tech.tech_category_name
