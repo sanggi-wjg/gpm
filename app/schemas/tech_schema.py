@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel, PositiveInt
+from pydantic import BaseModel, PositiveInt, validator
 
 
 class TechStackBase(BaseModel):
@@ -13,6 +13,13 @@ class TechStackBase(BaseModel):
 
 class TechStackRegister(BaseModel):
     name: str
+    color: str | None = ''
+
+    # @validator("color")
+    # def replace_color(cls, color):
+    #     if color:
+    #         color = color.replace(" ", '')
+    #     return color
 
 
 class TechStack(TechStackBase):

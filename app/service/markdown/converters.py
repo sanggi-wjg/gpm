@@ -73,23 +73,27 @@ class TechConverter(Converter):
         for tech in user_tech:
             category_name = tech.tech_category_name
             stack_name = tech.tech_stack_name
+            stack_color = tech.tech_stack_color
 
             if category_name not in badges.keys():
-                badges.setdefault(category_name, [stack_name])
+                badges.setdefault(category_name, [(stack_name, stack_color)])
             else:
-                badges[category_name].append(stack_name)
+                badges[category_name].append((stack_name, stack_color))
         return badges
 
-    def create_badge(self, stack_name: str):
-        return f"![{stack_name}]({self.shield_badge(stack_name, get_random_colors(), stack_name)})\n"
+    def create_badge(self, stack_name: str, stack_color: str):
+        if stack_color:
+            return f"![{stack_name}]({self.shield_badge(stack_name, stack_color, stack_name)})\n"
+        else:
+            return f"![{stack_name}]({self.shield_badge(stack_name, get_random_colors(), stack_name)})\n"
 
     def convert(self, user_techs: List[UserTech]) -> str:
         result = "# 🛠 Tech Stack\n"
         user_tech_map = self.map_by_category_name(user_techs)
 
-        for category_name, stack_names in user_tech_map.items():
+        for category_name, tech_stacks in user_tech_map.items():
             result += f"## {category_name}\n"
-            for stack_name in stack_names:
-                result += self.create_badge(stack_name)
+            for stack_name, stack_color in tech_stacks:
+                result += self.create_badge(stack_name, stack_color)
             result += "\n"
         return f"{result}<br><br>\n\n"
