@@ -13,8 +13,8 @@ class CreateUserCommand(BaseCommand):
     help: str = "Create user"
 
     def add_arguments(self):
-        self.parser.add_argument('-email', type=str, help='User Email', required=True)
-        self.parser.add_argument('-password', type=str, help='Password', required=True)
+        self.parser.add_argument('-email', type=str, default='user@example.com', help='User Email')
+        self.parser.add_argument('-password', type=str, default='123', help='Password')
         self.args = self.parser.parse_args()
 
     def handle(self, *args, **kwargs):
@@ -23,11 +23,8 @@ class CreateUserCommand(BaseCommand):
             password1=self.args.password,
             password2=self.args.password
         )
-
-        find_user = user_service.find_user_by_email(self.db, user_register.email)
-        if not find_user:
-            user_service.create_user(self.db, user_register)
-            self.debug(f"new_user({user_register.email}) created")
+        user_service.create_admin_user(self.db, user_register)
+        self.debug(f"new_user({user_register.email}) created")
 
 
 command = CreateUserCommand(argparse.ArgumentParser())

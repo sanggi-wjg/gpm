@@ -10,7 +10,7 @@ def get_access_token_for_test(client: TestClient, test_db: Session, email: str, 
     register_user = UserRegister(email=email, password1=password, password2=password)
     user_service.create_user(test_db, register_user)
 
-    response = client.post("/login", jsonable_encoder({"username": email, "password": password}))
+    response = client.post("/token", jsonable_encoder({"username": email, "password": password}))
     access_token = response.json()['access_token']
     return {
         "Authorization": f"Bearer {access_token}"

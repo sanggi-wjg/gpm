@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     access_token_algorithm: str
     access_token_expire_minutes: int
 
+    github_client_id: str
+    github_secret: str
+
     gzip_minimum_size: int
 
     database_engine: str
