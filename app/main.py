@@ -2,6 +2,8 @@ import logging
 
 import uvicorn
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 from starlette.staticfiles import StaticFiles
 
 from app.core.config import get_config_settings
@@ -31,6 +33,16 @@ def create_app():
         Base.metadata.create_all(bind=Engine)
         logging.basicConfig()
         logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
+    app.add_middleware(GZipMiddleware, minimum_size=settings.gzip_minimum_size)
+    # app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.trust_host)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
 
     # static
     app.mount("/static", StaticFiles(directory=settings.static_root), name="static")

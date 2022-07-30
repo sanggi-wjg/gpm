@@ -89,7 +89,6 @@ def create_tech_stack(db: Session, tech_category_id: int, tech_stack: TechStackR
     find_tech_stack = find_tech_stack_by_name(db, tech_stack.name)
     if find_tech_stack:
         raise DuplicateError(tech_stack.name)
-
     new_tech_stack = TechStackEntity(
         name=tech_stack.name,
         color=tech_stack.color,

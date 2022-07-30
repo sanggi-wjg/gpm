@@ -1,30 +1,27 @@
 from typing import List
 
-from pydantic import BaseModel, PositiveInt
+from pydantic import BaseModel, PositiveInt, validator
 
 
 class TechStackBase(BaseModel):
     id: PositiveInt
     name: str
-    # badge: str
-    # datetime_of_created: datetime
-    # datetime_of_updated: datetime
 
 
 class TechStackRegister(BaseModel):
     name: str
-    color: str | None = ''
+    color: str | None = None
 
-    # @validator("color")
-    # def replace_color(cls, color):
-    #     if color:
-    #         color = color.replace(" ", '')
-    #     return color
+    @validator("color")
+    def replace_color(cls, color):
+        if color:
+            color = color.replace(" ", '')
+        return color
 
 
 class TechStack(TechStackBase):
     tech_category_id: PositiveInt
-    color: str | None = ''
+    color: str | None = None
 
     class Config:
         orm_mode = True
@@ -33,8 +30,6 @@ class TechStack(TechStackBase):
 class TechCategoryBase(BaseModel):
     id: PositiveInt
     name: str
-    # datetime_of_created: datetime
-    # datetime_of_updated: datetime
 
 
 class TechCategoryRegister(BaseModel):
