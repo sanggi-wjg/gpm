@@ -1,3 +1,8 @@
+function move_page_scroll(obj, offset_delta = 100) {
+    const offset = obj.offset();
+    $("html, body").animate({scrollTop: offset.top - offset_delta}, 200);
+}
+
 function show_tech_stacks(tech_categories) {
     let html = `<div class="row justify-space-between py-2">`;
     // tech categories
@@ -12,8 +17,8 @@ function show_tech_stacks(tech_categories) {
             html += `<button type="button" class="btn bg-gradient-light w-auto me-2 btn-tech-stack"
                             onclick="choose_tech_stacks($(this))"
                             data-user-choose="0"
-                            data-tech-category-id="${stack.tech_category_id}"
                             data-tech-category-name="${category.name}"
+                            data-tech-stack-color="${stack.color}"
                             data-tech-stack-name="${stack.name}">${stack.name}</button>`
         });
         // console.log("=============");
@@ -63,11 +68,13 @@ function get_techs() {
     $(".btn-tech-stack[data-user-choose=1]").each(function (_, btn) {
         techs.push({
             tech_category_name: $(this).attr('data-tech-category-name'),
-            tech_stack_name: $(this).attr('data-tech-stack-name')
+            tech_stack_name: $(this).attr('data-tech-stack-name'),
+            tech_stack_color: $(this).attr('data-tech-stack-color')
         })
     })
     return techs;
 }
+
 
 function save_markdown() {
     const UserMarkdownCreateForm = {
@@ -77,9 +84,10 @@ function save_markdown() {
         user_techs: get_techs(),
     }
     if (UserMarkdownCreateForm.user_github_name === "") {
-
+        move_page_scroll($("#user_github_name"))
+        return false;
     }
-    console.log(UserMarkdownCreateForm)
+    // console.log(UserMarkdownCreateForm)
 
     $.ajax({
         method: "POST",

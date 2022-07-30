@@ -112,7 +112,7 @@ class TestTechStackRouter:
         url = "/api/v1/tech-categories"
 
         response = client.post(url,
-                               json=jsonable_encoder(TechCategoryRegister(name="Programming Language")),
+                               json=jsonable_encoder(TechCategoryRegister(name="Programming Language", color='')),
                                headers=access_token_headers)
         tech_category = TechCategory(**response.json())
         assert response.status_code == status.HTTP_201_CREATED
@@ -125,7 +125,7 @@ class TestTechStackRouter:
         stack_name = "Python"
         # when
         response = client.post(self.get_url(client, access_token_headers),
-                               json=jsonable_encoder(TechStackRegister(name=stack_name)),
+                               json=jsonable_encoder(TechStackRegister(name=stack_name, color='')),
                                headers=access_token_headers)
         # then
         assert response.status_code == status.HTTP_201_CREATED

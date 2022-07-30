@@ -19,7 +19,8 @@ Shield Badge (https://shields.io/)
 
 ## App Screenshot
 ![](media/app_screenshot.png)
-![](media/my_profile.png)
+![](media/profile.png)
+
 
 ## How to use own yourself
 ### 1. Clone this repository.
