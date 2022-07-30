@@ -1,0 +1,5 @@
+### Github User
+GET https://api.github.com/user
+Accept: application/vnd.github+json
+Authorization: bearer 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
+

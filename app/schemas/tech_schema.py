@@ -5,7 +5,6 @@ from pydantic import BaseModel, PositiveInt, validator
 
 class TechStackBase(BaseModel):
     id: PositiveInt
-    name: str
 
 
 class TechStackRegister(BaseModel):
@@ -20,6 +19,7 @@ class TechStackRegister(BaseModel):
 
 
 class TechStack(TechStackBase):
+    name: str
     tech_category_id: PositiveInt
     color: str | None = None
 
@@ -29,7 +29,6 @@ class TechStack(TechStackBase):
 
 class TechCategoryBase(BaseModel):
     id: PositiveInt
-    name: str
 
 
 class TechCategoryRegister(BaseModel):
@@ -37,6 +36,7 @@ class TechCategoryRegister(BaseModel):
 
 
 class TechCategory(TechCategoryBase):
+    name: str
     tech_stacks: List[TechStack] = []
 
     class Config:

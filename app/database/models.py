@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey, UniqueConstraint, Boolean
 from sqlalchemy.orm import relationship
 
 from app.database.database import Base
@@ -13,13 +13,21 @@ class UserStatus(enum.Enum):
     DROP = "Drop"
 
 
+class UserProvider(enum.Enum):
+    Own = "Own"
+    GITHUB = "Github"
+    GOOGLE = "Google"
+
+
 class UserEntity(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True, autoincrement="auto", index=True)
 
     email = Column(String(50), unique=True, nullable=False, index=True)
-    hashed_password = Column(String(250), nullable=False)
+    hashed_password = Column(String(250))
+    is_admin = Column(Boolean, nullable=False, default=False)
+    provider = Column(Enum(UserProvider), nullable=False, default=UserProvider.Own)
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.ACTIVE)
 
     datetime_of_created = Column(DateTime(timezone=True), default=datetime.utcnow)

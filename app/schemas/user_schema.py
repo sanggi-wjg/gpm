@@ -3,14 +3,20 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, validator, PositiveInt
 
 from app.utils.auth_utils import hash_password
-from app.database.models import UserStatus
+from app.database.models import UserStatus, UserProvider
 
 
 class UserBase(BaseModel):
+    id: PositiveInt
+
+
+class UserProvidedRegister(BaseModel):
     email: EmailStr
+    provider: UserProvider
 
 
-class UserRegister(UserBase):
+class UserRegister(BaseModel):
+    email: EmailStr
     password1: str
     password2: str
 
@@ -26,7 +32,7 @@ class UserRegister(UserBase):
 
 
 class User(UserBase):
-    id: PositiveInt
+    email: EmailStr
     status: UserStatus
     datetime_of_created: datetime
     datetime_of_updated: datetime

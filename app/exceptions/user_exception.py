@@ -26,6 +26,6 @@ class BadCredentials(UserException):
 async def bad_credentials_handler(request: Request, e: BadCredentials):
     return JSONResponse(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        content={"detail": "Incorrect email or password"},
+        content={"detail": "Invalid credentials"},
         headers={"WWW-Authenticate": "Bearer"}
     )
