@@ -3,8 +3,7 @@ import os
 from app.core.config import get_config_settings
 from app.schemas.markdown_schema import UserMarkdownCreate
 from app.service.markdown.converters import (
-    convert_hello, convert_introduction, SocialConverter, TechConverter,
-    convert_github
+    convert_hello, convert_introduction, SocialConverter, TechConverter, convert_github
 )
 
 

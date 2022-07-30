@@ -55,12 +55,24 @@ async def remove_tech_category(tech_category_id: int,
     tech_service.delete_tech_category(db, tech_category_id)
 
 
-@router.get("/tech-categories/{tech_category_id}/tech-stacks", response_model=List[TechStack],
+@router.get("/tech-stacks", response_model=List[TechStack], status_code=status.HTTP_200_OK)
+async def get_tech_stacks_all(page_param: PageQueryParameter = Depends(page_parameter),
+                              db: Session = Depends(get_db)):
+    return tech_service.find_tech_stack_all_by_paged(db, page_param.offset, page_param.limit)
+
+
+@router.get("/tech-categories/{tech_category_id}/tech-stacks",
+            response_model=List[TechStack],
             status_code=status.HTTP_200_OK)
 async def get_tech_stacks(tech_category_id: int,
                           page_param: PageQueryParameter = Depends(page_parameter),
                           db: Session = Depends(get_db)):
-    return tech_service.find_tech_stack_all_by_paged(db, tech_category_id, page_param.offset, page_param.limit)
+    return tech_service.find_tech_stack_all_by_category_id_and_paged(
+        db,
+        tech_category_id,
+        page_param.offset,
+        page_param.limit
+    )
 
 
 @router.post("/tech-categories/{tech_category_id}/tech-stacks", response_model=TechStack,

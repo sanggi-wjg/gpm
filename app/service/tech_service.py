@@ -63,7 +63,18 @@ def delete_tech_category(db: Session, tech_category_id: int):
     return True
 
 
-def find_tech_stack_all_by_paged(db: Session, tech_category_id: int, offset: int, limit: int) -> List[TechStackEntity]:
+def find_tech_stack_all(db: Session) -> List[TechStackEntity]:
+    return db.query(TechStackEntity).all()
+
+
+def find_tech_stack_all_by_paged(db: Session, offset: int, limit: int) -> List[TechStackEntity]:
+    return db.query(TechStackEntity).offset(offset).limit(limit).all()
+
+
+def find_tech_stack_all_by_category_id_and_paged(db: Session,
+                                                 tech_category_id: int,
+                                                 offset: int,
+                                                 limit: int) -> List[TechStackEntity]:
     return db.query(TechStackEntity).filter(
         TechStackEntity.tech_category_id == tech_category_id
     ).offset(offset).limit(limit).all()
@@ -81,6 +92,7 @@ def create_tech_stack(db: Session, tech_category_id: int, tech_stack: TechStackR
 
     new_tech_stack = TechStackEntity(
         name=tech_stack.name,
+        color=tech_stack.color,
         tech_category_id=find_tech_category.id
     )
     db.add(new_tech_stack)

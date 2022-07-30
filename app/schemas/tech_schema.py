@@ -1,11 +1,12 @@
 from typing import List
 
-from pydantic import BaseModel, PositiveInt
+from pydantic import BaseModel, PositiveInt, validator
 
 
 class TechStackBase(BaseModel):
     id: PositiveInt
     name: str
+    color: str | None = None
     # badge: str
     # datetime_of_created: datetime
     # datetime_of_updated: datetime
@@ -13,6 +14,13 @@ class TechStackBase(BaseModel):
 
 class TechStackRegister(BaseModel):
     name: str
+    color: str | None = None
+
+    @validator("color")
+    def replace_color(cls, color):
+        if color:
+            color = color.replace(" ", '')
+        return color
 
 
 class TechStack(TechStackBase):

@@ -50,6 +50,7 @@ class TechStackEntity(Base):
 
     id = Column(Integer, primary_key=True, autoincrement="auto", index=True)
     name = Column(String(50), nullable=False, index=True)
+    color = Column(String(20), nullable=True, default=None)
 
     # 정방향 relation
     tech_category_id = Column(Integer, ForeignKey("tech_category.id"), nullable=False)
