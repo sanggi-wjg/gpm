@@ -24,6 +24,7 @@ class TechStackRegister(BaseModel):
 
 class TechStack(TechStackBase):
     tech_category_id: PositiveInt
+    color: str | None = ''
 
     class Config:
         orm_mode = True
