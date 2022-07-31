@@ -31,7 +31,6 @@ function is_authenticated() {
             return false;
         }
     } catch (err) {
-        console.log(err)
         return false;
     }
     return true;
