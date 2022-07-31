@@ -20,7 +20,7 @@ const TOKEN_KEY = "access_token"
 
 function is_authenticated() {
     const token = localStorage.getItem(TOKEN_KEY);
-    if (token === '' || token === null) {
+    if (token === '' || token === null || token === undefined) {
         return false;
     }
 
