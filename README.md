@@ -33,8 +33,7 @@ App load the configurations from `.env` file. Please refer to the code below.
 filepath = os.path.join(base, "config", environ.get('CONFIG_ENV', '.env.local'))
 ```
 
-
-### For example `.env.local`
+#### For example `.env.local`
 ```dotenv
 # Enviornment
 DEBUG=True
@@ -76,8 +75,13 @@ MYSQL_PORT=3
 MYSQL_DB_NAME=4
 ```
 
-## Commands
-### Create User
+### 3. Execute app/main.py
+```shell
+python app/main.py
+```
+
+### 4. Use Commands
+#### Create User
 ```shell
 python app/commands/managements/create_user.py -email jayg@nhn-commerce.com -password passw0rd
 
@@ -86,7 +90,7 @@ new_user(jayg@nhn-commerce.com) created
 FINISH Command
 ```
 
-### Create Techs
+#### Create Techs
 ```shell
 python app/commands/managements/create_techs.py
 
@@ -95,13 +99,9 @@ Create Programming Language or not
 Create Python or not
 Create Java or not
 Create PHP or not
-
 ...
-
 Create OracleDB or not
 Create MsSQL or not
 Create Cubrid or not
 FINISH Command
 ```
-
-### 4. Execute app/main.py
