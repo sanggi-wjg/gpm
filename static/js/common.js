@@ -42,7 +42,7 @@ function remove_access_token(){
 
 $(document).ready(function () {
     let token = localStorage.getItem(TOKEN_KEY)
-    if (token === '' || token === null) {
+    if (token === '' || token === null || token === 'null' || token === undefined) {
         const token_cookie = get_cookie(TOKEN_KEY)
         if (token_cookie !== '') {
             delete_cookie(TOKEN_KEY)
