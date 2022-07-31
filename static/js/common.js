@@ -37,9 +37,8 @@ function is_authenticated() {
     return true;
 }
 
-function logout() {
+function remove_access_token(){
     localStorage.removeItem(TOKEN_KEY);
-    document.location.href = "/";
 }
 
 $(document).ready(function () {
@@ -53,9 +52,9 @@ $(document).ready(function () {
     }
     if (is_authenticated()) {
         $("#btn_login").hide();
-        $("#btn_logout").show();
+        // $("#btn_logout").show();
     } else {
         $("#btn_login").show();
-        $("#btn_logout").hide();
+        // $("#btn_logout").hide();
     }
 });
