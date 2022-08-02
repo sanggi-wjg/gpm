@@ -17,7 +17,7 @@ def hash_password(plain_password: str) -> str:
     return crypt.hash(plain_password)
 
 
-def create_jwt_access_token(data: dict):
+def create_jwt_access_token(data: dict) -> str:
     to_encode = data.copy()
     to_encode.update({'exp': datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)})
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.access_token_algorithm)

@@ -14,7 +14,7 @@ class UserStatus(enum.Enum):
 
 
 class UserProvider(enum.Enum):
-    Own = "Own"
+    OWN = "Own"
     GITHUB = "Github"
     GOOGLE = "Google"
 
@@ -27,7 +27,7 @@ class UserEntity(Base):
     email = Column(String(50), unique=True, nullable=False, index=True)
     hashed_password = Column(String(250))
     is_admin = Column(Boolean, nullable=False, default=False)
-    provider = Column(Enum(UserProvider), nullable=False, default=UserProvider.Own)
+    provider = Column(Enum(UserProvider), nullable=False, default=UserProvider.OWN)
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.ACTIVE)
 
     datetime_of_created = Column(DateTime(timezone=True), default=datetime.utcnow)
@@ -41,7 +41,7 @@ class TechCategoryEntity(Base):
     name = Column(String(50), unique=True, nullable=False, index=True)
 
     # 역방향 relation
-    tech_stacks = relationship("TechStackEntity", back_populates="tech_category")
+    tech_stacks = relationship("TechStackEntity", back_populates="tech_category", lazy='selectin')
 
     datetime_of_created = Column(DateTime(timezone=True), default=datetime.utcnow)
     datetime_of_updated = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)

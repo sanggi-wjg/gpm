@@ -8,7 +8,7 @@ from app.database.database import get_db
 from app.dependencies.query_depend import page_parameter, PageQueryParameter
 from app.exceptions.exception import NotFound
 from app.routers import RouterTags
-from app.routers.auth import verify_current_user
+from app.routers.auth import verify_admin_user
 from app.schemas.tech_schema import TechCategory, TechCategoryRegister, TechStack, TechStackRegister
 from app.schemas.user_schema import User
 from app.service import tech_service
@@ -27,7 +27,7 @@ async def get_tech_categories(page_param: PageQueryParameter = Depends(page_para
 
 @router.post("/tech-categories", response_model=TechCategory, status_code=status.HTTP_201_CREATED)
 async def create_tech_category(tech_category: TechCategoryRegister,
-                               current_user: User = Depends(verify_current_user),
+                               current_user: User = Depends(verify_admin_user),
                                db: Session = Depends(get_db)):
     return tech_service.create_tech_category(db, tech_category)
 
@@ -43,14 +43,14 @@ async def get_tech_category(tech_category_id: int, db: Session = Depends(get_db)
 @router.put("/tech-categories/{tech_category_id}", response_model=TechCategory, status_code=status.HTTP_200_OK)
 async def change_tech_category(tech_category_id: int,
                                tech_category: TechCategoryRegister,
-                               current_user: User = Depends(verify_current_user),
+                               current_user: User = Depends(verify_admin_user),
                                db: Session = Depends(get_db)):
     return tech_service.update_tech_category(db, tech_category_id, tech_category)
 
 
 @router.delete("/tech-categories/{tech_category_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_tech_category(tech_category_id: int,
-                               current_user: User = Depends(verify_current_user),
+                               current_user: User = Depends(verify_admin_user),
                                db: Session = Depends(get_db)):
     tech_service.delete_tech_category(db, tech_category_id)
 
@@ -78,6 +78,6 @@ async def get_tech_stacks(tech_category_id: int,
              status_code=status.HTTP_201_CREATED)
 async def create_tech_stack(tech_category_id: int,
                             tech_stack: TechStackRegister,
-                            current_user: User = Depends(verify_current_user),
+                            current_user: User = Depends(verify_admin_user),
                             db: Session = Depends(get_db)):
     return tech_service.create_tech_stack(db, tech_category_id, tech_stack)

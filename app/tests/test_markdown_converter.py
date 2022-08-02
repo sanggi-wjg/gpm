@@ -1,9 +1,9 @@
 import os
 
-from app.schemas.markdown_schema import SocialSite, UserTech
+from app.schemas.markdown_schema import SocialSite, UserTech, UserMarkdownCreate
 from app.service.markdown.converters import convert_hello, convert_introduction, SocialConverter, TechConverter, \
     convert_github
-from app.service.markdown.markdown_converter import get_markdown_save_path, save_markdown
+from app.service.markdown.markdown_converter import get_markdown_save_path, save_markdown, MarkdownConverter
 
 
 class TestMarkdownConverter:
@@ -68,4 +68,20 @@ class TestMarkdownConverter:
     def test_tech_converters(self):
         converter = TechConverter()
         result = converter.convert(self.get_sample_user_techs())
+        assert result
+
+    def test_markdown_converter(self):
+        # given
+        markdown_create = UserMarkdownCreate(
+            user_github_name="TestUser",
+            user_introduction="TestIntroduction",
+            user_socials=[
+                SocialSite(site_name="TestSiteName", site_url="https://{input}.test.com", site_user_name="TestSiteUser")
+            ],
+            user_techs=[
+                UserTech(tech_category_name="Framework", tech_stack_name="Gin")
+            ]
+        )
+        converter = MarkdownConverter(markdown_create)
+        result = converter.convert()
         assert result

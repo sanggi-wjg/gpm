@@ -11,14 +11,14 @@ from starlette.responses import HTMLResponse, RedirectResponse
 
 from app.core.config import get_config_settings
 from app.database.database import get_db
-from app.database.models import UserProvider
+from app.database.models import UserProvider, UserEntity
 from app.exceptions.user_exception import BadCredentials, NotExistEmail
 from app.routers.home import templates
 from app.schemas.user_schema import UserProvidedRegister
 from app.service import user_service
 from app.routers import RouterTags
 from app.schemas.auth_schema import Token, TokenData, GithubToken
-from app.utils.auth_utils import verify_password, create_jwt_access_token
+from app.utils.authentication import verify_password, create_jwt_access_token
 
 router = APIRouter(
     tags=[RouterTags.Auth],
@@ -29,7 +29,7 @@ settings = get_config_settings()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-async def verify_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+async def verify_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> UserEntity:
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=[settings.access_token_algorithm])
         username = payload.get('sub')
@@ -43,6 +43,13 @@ async def verify_current_user(token: str = Depends(oauth2_scheme), db: Session =
     if not find_user:
         raise BadCredentials()
     return find_user
+
+
+async def verify_admin_user(user: UserEntity = Depends(verify_current_user)) -> UserEntity:
+    if not user.is_admin:
+        raise BadCredentials()
+
+    return user
 
 
 @router.post("/token", response_model=Token)
@@ -94,7 +101,7 @@ async def login_github_callback(request: Request, code: str, state: str = None, 
     user_email = response.json()['email']
     find_user = user_service.find_user_by_email_and_provider(db, user_email, UserProvider.GITHUB)
     if not find_user:
-        user_service.create_user_provided(
+        user_service.create_provider_user(
             db, UserProvidedRegister(email=user_email, provider=UserProvider.GITHUB)
         )
 

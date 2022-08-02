@@ -10,11 +10,11 @@ from app.service import user_service
 
 
 class CreateUserCommand(BaseCommand):
-    help: str = "Create user"
+    help: str = "Create Super User\n Must enter arguments\n eg. -email jayg@nhn-commerce.com -password passw0rd"
 
     def add_arguments(self):
-        self.parser.add_argument('-email', type=str, default='user@example.com', help='User Email')
-        self.parser.add_argument('-password', type=str, default='123', help='Password')
+        self.parser.add_argument('-email', type=str, required=True, help='User Email')
+        self.parser.add_argument('-password', type=str, required=True, help='Password')
         self.args = self.parser.parse_args()
 
     def handle(self, *args, **kwargs):

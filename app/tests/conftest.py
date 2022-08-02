@@ -9,7 +9,7 @@ from starlette.testclient import TestClient
 from app.core.config import get_config_settings
 from app.database.database import Base, get_db
 from app.main import create_app
-from app.tests.utils.test_utils import get_access_token_for_test
+from app.tests.utils.test_utils import get_access_token_for_normal_user, get_access_token_for_admin_user
 
 """
 https://github.com/timhughes/example-fastapi-sqlachemy-pytest/blob/master/tests/conftest.py
@@ -54,4 +54,9 @@ def client(app: FastAPI, test_db: Session) -> Generator[TestClient, Any, None]:
 
 @pytest.fixture
 def access_token_headers(client: TestClient, test_db: Session):
-    return get_access_token_for_test(client, test_db, settings.test_user_email, settings.test_user_password)
+    return get_access_token_for_normal_user(client, test_db, settings.test_user_email, settings.test_user_password)
+
+
+@pytest.fixture
+def access_token_headers_admin(client: TestClient, test_db: Session):
+    return get_access_token_for_admin_user(client, test_db, settings.test_user_email, settings.test_user_password)
