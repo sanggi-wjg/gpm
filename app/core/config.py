@@ -50,6 +50,9 @@ class Settings(BaseSettings):
     mysql_port: int
     mysql_db_name: str
 
+    redis_host: str
+    redis_port: int
+
     class Config:
         env_file = get_env_filepath()
 

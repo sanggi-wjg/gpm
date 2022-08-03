@@ -1,7 +1,9 @@
 from typing import Generator, Any
 
+import fakeredis
 import pytest
 from fastapi import FastAPI
+from redis.client import Redis
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from starlette.testclient import TestClient
@@ -43,11 +45,24 @@ def test_db(app: FastAPI) -> Generator[Session, Any, None]:
 
 
 @pytest.fixture
+def test_redis(app: FastAPI) -> Generator[Redis, Any, None]:
+    redis = fakeredis.FakeStrictRedis(server=fakeredis.FakeServer())
+    try:
+        yield redis
+    finally:
+        redis.close()
+
+
+@pytest.fixture
 def client(app: FastAPI, test_db: Session) -> Generator[TestClient, Any, None]:
     def _get_test_db():
         yield test_db
 
+    # def _get_test_redis():
+    #     yield test_redis
+
     app.dependency_overrides[get_db] = _get_test_db
+    # app.dependency_overrides[get_redis] = _get_test_redis
     with TestClient(app) as client:
         yield client
 

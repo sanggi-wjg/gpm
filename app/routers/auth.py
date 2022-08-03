@@ -65,12 +65,12 @@ async def get_jwt_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Se
 
 
 @router.get("/login", response_class=HTMLResponse)
-async def login(request: Request):
+async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
 @router.get("/login/github")
-async def login_github():
+async def login_github_redirect():
     query = f"?client_id={settings.github_client_id}"
     query += f"&state={uuid.uuid4()}"
     return RedirectResponse(f"https://github.com/login/oauth/authorize{query}")

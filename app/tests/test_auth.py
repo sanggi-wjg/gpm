@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from starlette import status
@@ -13,8 +12,15 @@ class TestAuthRouter:
     # def setup_method(self, method):
     #     self.url = '/api/v1/users'
 
-    def test_token(self, app: FastAPI, test_db: Session, client: TestClient,
-                   access_token_headers):
+    def test_get_login_page(self, client: TestClient):
+        response = client.get("/login")
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_get_login_github_page(self, client: TestClient):
+        response = client.get("/login/github", allow_redirects=False)
+        assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
+
+    def test_post_token(self, test_db: Session, client: TestClient, access_token_headers):
         # given
         user_email, password = "test@host.com", "123"
         user_register = UserRegister(email=user_email, password1=password, password2=password)
@@ -25,8 +31,7 @@ class TestAuthRouter:
         assert response.status_code == status.HTTP_200_OK
         assert response.json()['access_token']
 
-    def test_token_invalid_user(self, app: FastAPI, test_db: Session, client: TestClient,
-                                access_token_headers):
+    def test_post_token_invalid_user(self, test_db: Session, client: TestClient, access_token_headers):
         # given
         user_email, password = "test@host.com", "123"
         user_register = UserRegister(email=user_email, password1=password, password2=password)

@@ -1,3 +1,6 @@
+import pickle
+
+import redis
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -28,7 +31,23 @@ class TestTechCategoryRouter:
     def setup_method(self, method):
         self.url = '/api/v1/tech-categories'
 
-    def test_get_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient):
+    def test_get_redis_cache(self, test_db: Session, test_redis: redis.Redis):
+        # given
+        redis_key = "categories"
+        categories = tech_service.find_tech_category_all(test_db)
+        # when
+        find = test_redis.get(redis_key)
+        # then
+        assert test_redis.exists(redis_key) == 0
+        # then
+        if find is None:
+            test_redis.setex(redis_key, 60, pickle.dumps(categories))
+            assert test_redis.exists(redis_key) == 1
+        # then
+        find = test_redis.get(redis_key)
+        assert find
+
+    def test_get_tech_categories(self, client: TestClient, test_redis):
         response = client.get(self.url)
         assert response.status_code == status.HTTP_200_OK
 
@@ -99,11 +118,11 @@ class TestTechCategoryDetailRouter:
 
         return f"{self.url}/{tech_category.id}"
 
-    def test_get_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient):
-        response = client.get(self.url)
+    def test_get_tech_category(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers_admin):
+        response = client.get(self.get_url(client, access_token_headers_admin))
         assert response.status_code == status.HTTP_200_OK
 
-    def test_put_tech_categories(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers_admin):
+    def test_put_tech_category(self, app: FastAPI, test_db: Session, client: TestClient, access_token_headers_admin):
         # given
         change_name = "Framework"
         # when

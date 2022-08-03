@@ -1,9 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from starlette import status
 from starlette.responses import FileResponse
 
 from app.routers import RouterTags
+from app.routers.auth import verify_current_user
 from app.schemas.markdown_schema import UserMarkdownCreate
+from app.schemas.user_schema import User
 from app.service.markdown.markdown_converter import MarkdownConverter, save_markdown
 
 router = APIRouter(
@@ -14,7 +16,7 @@ router = APIRouter(
 
 
 @router.post("/markdowns", response_class=FileResponse, status_code=status.HTTP_201_CREATED)
-async def get_tech_categories(user_markdown: UserMarkdownCreate):
+async def get_tech_categories(user_markdown: UserMarkdownCreate, current_user: User = Depends(verify_current_user)):
     converter = MarkdownConverter(user_markdown)
     return FileResponse(
         save_markdown(user_markdown.user_github_name, converter.convert()),

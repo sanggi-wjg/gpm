@@ -1,3 +1,4 @@
+import pytest
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.testclient import TestClient
@@ -5,8 +6,9 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from app.database.models import UserProvider, UserStatus
+from app.exceptions.exception import DuplicateError
 from app.service import user_service
-from app.schemas.user_schema import UserRegister
+from app.schemas.user_schema import UserRegister, UserProvidedRegister
 
 
 class TestUserRepo:
@@ -26,6 +28,17 @@ class TestUserRepo:
         assert new_user.is_admin is False
         assert new_user.provider == UserProvider.OWN
 
+    def test_create_normal_user_duplicate(self, test_db: Session):
+        # given
+        user_email = "test@host.com"
+        user_register = UserRegister(email=user_email, password1="123", password2="123")
+        # when
+        new_user = user_service.create_user(test_db, user_register)
+        assert new_user.id == 1
+        # then
+        with pytest.raises(DuplicateError):
+            _ = user_service.create_user(test_db, user_register)
+
     def test_create_super_user(self, test_db: Session):
         # given
         user_email = "test@host.com"
@@ -37,6 +50,18 @@ class TestUserRepo:
         assert new_user.email == user_email
         assert new_user.is_admin is True
         assert new_user.provider == UserProvider.OWN
+
+    def test_create_provider_user(self, test_db: Session):
+        # given
+        user_email = "test@host.com"
+        user_register = UserProvidedRegister(email=user_email, provider=UserProvider.GITHUB)
+        # when
+        new_user = user_service.create_provider_user(test_db, user_register)
+        # then
+        assert new_user.id == 1
+        assert new_user.email == user_email
+        assert new_user.is_admin is False
+        assert new_user.provider == UserProvider.GITHUB
 
 
 class TestUserRouter:

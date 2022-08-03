@@ -7,8 +7,8 @@ from app.exceptions.exception import NotFound, DuplicateError
 from app.schemas.tech_schema import TechStackRegister, TechCategoryRegister
 
 
-def find_tech_category_all_by_paged(db: Session, offset: int, limit: int) -> List[TechCategoryEntity]:
-    return db.query(TechCategoryEntity).offset(offset).limit(limit).all()
+def find_tech_category_all(db: Session) -> List[TechCategoryEntity]:
+    return db.query(TechCategoryEntity).all()
 
 
 def find_tech_category_by_name(db: Session, name: str) -> TechCategoryEntity:

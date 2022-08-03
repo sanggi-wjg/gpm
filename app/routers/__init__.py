@@ -7,3 +7,4 @@ class RouterTags(str, Enum):
     User = "Users"
     Tech = "Techs"
     Markdown = "Markdowns"
+    Profile = "Profiles"

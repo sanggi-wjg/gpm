@@ -1,9 +1,12 @@
+import pickle
 from typing import List
 
 from fastapi import APIRouter, Depends
+from redis.client import Redis
 from sqlalchemy.orm import Session
 from starlette import status
 
+from app.database.cache import get_redis
 from app.database.database import get_db
 from app.dependencies.query_depend import page_parameter, PageQueryParameter
 from app.exceptions.exception import NotFound
@@ -21,8 +24,17 @@ router = APIRouter(
 
 
 @router.get("/tech-categories", response_model=List[TechCategory], status_code=status.HTTP_200_OK)
-async def get_tech_categories(page_param: PageQueryParameter = Depends(page_parameter), db: Session = Depends(get_db)):
-    return tech_service.find_tech_category_all_by_paged(db, page_param.offset, page_param.limit)
+async def get_tech_categories(db: Session = Depends(get_db),
+                              redis: Redis = Depends(get_redis)):
+    redis_key = "tech-category:tech-stack:all"
+    categories = redis.get(redis_key)
+
+    if categories is None:
+        response = tech_service.find_tech_category_all(db)
+        _ = redis.setex(redis_key, 60 * 60, pickle.dumps(response))
+        return response
+
+    return pickle.loads(categories)
 
 
 @router.post("/tech-categories", response_model=TechCategory, status_code=status.HTTP_201_CREATED)
