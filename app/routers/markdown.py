@@ -16,7 +16,7 @@ router = APIRouter(
 
 
 @router.post("/markdowns", response_class=FileResponse, status_code=status.HTTP_201_CREATED)
-async def get_tech_categories(user_markdown: UserMarkdownCreate, current_user: User = Depends(verify_current_user)):
+async def get_tech_categories(user_markdown: UserMarkdownCreate):
     converter = MarkdownConverter(user_markdown)
     return FileResponse(
         save_markdown(user_markdown.user_github_name, converter.convert()),
