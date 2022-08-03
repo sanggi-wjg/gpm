@@ -9,8 +9,8 @@ from app.schemas.user_schema import UserRegister
 from app.service import user_service
 
 
-class CreateUserCommand(BaseCommand):
-    help: str = "Create Super User\n Must enter arguments\n eg. -email jayg@nhn-commerce.com -password passw0rd"
+class CreateAdminUserCommand(BaseCommand):
+    help: str = "Create Admin User\n Must enter arguments\n eg. -email jayg@nhn-commerce.com -password passw0rd"
 
     def add_arguments(self):
         self.parser.add_argument('-email', type=str, required=True, help='User Email')
@@ -27,5 +27,5 @@ class CreateUserCommand(BaseCommand):
         self.debug(f"new_user({user_register.email}) created")
 
 
-command = CreateUserCommand(argparse.ArgumentParser())
+command = CreateAdminUserCommand(argparse.ArgumentParser())
 command.operate()

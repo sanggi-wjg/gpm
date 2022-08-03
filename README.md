@@ -8,6 +8,10 @@ It helps you to make your GitHub profile. If you do not have the profile, try th
 [[Demo Site](http://15.164.50.32/)]
 
 ## Development Environment
+![Python](https://img.shields.io/badge/Python-4B8BBE.svg?style=for-the-badge&logo=Python&logoColor=yellow)
+![FastAPI](https://img.shields.io/badge/FastAPI-329688.svg?style=for-the-badge&logo=FastAPI&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-4092e2.svg?style=for-the-badge&logo=Docker&logoColor=white)
+
 ```
 Python 3.10
 FastAPI (https://fastapi.tiangolo.com/)
@@ -17,6 +21,13 @@ SqlAlchemy (https://www.sqlalchemy.org/)
 
 GitHub API (https://docs.github.com/en/rest/overview/resources-in-the-rest-api)
 Shield Badge (https://shields.io/)
+
+GitHub Stat 
+https://github-readme-stats.vercel.app
+https://github-profile-trophy.vercel.app
+
+Front 
+Material-kit
 ```
 
 ## App Screenshot

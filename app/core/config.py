@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     base_root = base
 
     app_name: str = "Github Profile Maker"
-    app_desc: str = "👍 GRP(Github Profile Maker) helps create markdown file to be used for ur github profile."
+    app_desc: str = "👍 GPM(Github Profile Maker) helps you to create markdown file to be used for ur github profile."
     app_version: str = "0.1.0"
     app_admin_name: str = "Sanggi"
 

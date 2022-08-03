@@ -25,7 +25,7 @@ class UserEntity(Base):
     id = Column(Integer, primary_key=True, autoincrement="auto", index=True)
 
     email = Column(String(50), unique=True, nullable=False, index=True)
-    hashed_password = Column(String(250))
+    hashed_password = Column(String(250), nullable=False)
     is_admin = Column(Boolean, nullable=False, default=False)
     provider = Column(Enum(UserProvider), nullable=False, default=UserProvider.OWN)
     status = Column(Enum(UserStatus), nullable=False, default=UserStatus.ACTIVE)
