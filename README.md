@@ -11,6 +11,8 @@ It helps you to make your GitHub profile. If you do not have the profile, try th
 ![Python](https://img.shields.io/badge/Python-4B8BBE.svg?style=for-the-badge&logo=Python&logoColor=yellow)
 ![FastAPI](https://img.shields.io/badge/FastAPI-329688.svg?style=for-the-badge&logo=FastAPI&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-4092e2.svg?style=for-the-badge&logo=Docker&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-ce2b26.svg?style=for-the-badge&logo=Redis&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-206188.svg?style=for-the-badge&logo=MySQL&logoColor=white)
 
 ```
 Python 3.10

@@ -1,10 +1,14 @@
 class PageQueryParameter:
     __slots__ = ['offset', 'limit']
 
-    def __init__(self, offset: int, limit: int):
+    def __init__(self, offset: int = 0, limit: int = 10):
         self.offset = offset
         self.limit = limit
 
 
-async def page_parameter(offset: int = 0, limit: int = 10) -> PageQueryParameter:
-    return PageQueryParameter(offset=offset, limit=limit)
+class TechStackSearch(PageQueryParameter):
+    __slots__ = ['name']
+
+    def __init__(self, offset: int = 0, limit: int = 10, name: str = None):
+        super().__init__(offset, limit)
+        self.name = name
