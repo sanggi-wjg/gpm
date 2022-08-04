@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from app.database.models import TechCategoryEntity, TechStackEntity
+from app.dependencies.query_depend import TechStackSearch
 from app.exceptions.exception import NotFound, DuplicateError
 from app.schemas.tech_schema import TechStackRegister, TechCategoryRegister
 
@@ -74,10 +75,14 @@ def find_tech_stack_all_by_paged(db: Session, offset: int, limit: int) -> List[T
 def find_tech_stack_all_by_category_id_and_paged(db: Session,
                                                  tech_category_id: int,
                                                  offset: int,
-                                                 limit: int) -> List[TechStackEntity]:
-    return db.query(TechStackEntity).filter(
+                                                 limit: int,
+                                                 search: TechStackSearch) -> List[TechStackEntity]:
+    queryset = db.query(TechStackEntity).filter(
         TechStackEntity.tech_category_id == tech_category_id
-    ).offset(offset).limit(limit).all()
+    )
+    if search.name is not None:
+        queryset = queryset.filter(TechStackEntity.name == search.name)
+    return queryset.offset(offset).limit(limit).all()
 
 
 def find_tech_stack_by_name(db: Session, name: str) -> TechStackEntity:

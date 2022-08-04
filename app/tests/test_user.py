@@ -83,14 +83,13 @@ class TestUserRouter:
         # then
         assert response.status_code == status.HTTP_200_OK
 
-    def test_post_users_with_normal_user(self, app: FastAPI, test_db: Session, client: TestClient,
-                                         access_token_headers):
+    def test_post_users_with_normal_user(self, app: FastAPI, test_db: Session, client: TestClient):
         # given
         register_user = UserRegister(email="test@host.com", password1="123", password2="123")
         # when
-        response = client.post(self.url, json=jsonable_encoder(register_user), headers=access_token_headers)
+        response = client.post(self.url, json=jsonable_encoder(register_user))
         # then
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.status_code == status.HTTP_201_CREATED
 
     def test_post_users_with_admin_user(self, app: FastAPI, test_db: Session, client: TestClient,
                                         access_token_headers_admin):

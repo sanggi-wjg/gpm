@@ -7,13 +7,13 @@ from sqlalchemy.orm import relationship
 from app.database.database import Base
 
 
-class UserStatus(enum.Enum):
+class UserStatus(str, enum.Enum):
     ACTIVE = "Active"
     STOP = "Stop"
     DROP = "Drop"
 
 
-class UserProvider(enum.Enum):
+class UserProvider(str, enum.Enum):
     OWN = "Own"
     GITHUB = "Github"
     GOOGLE = "Google"

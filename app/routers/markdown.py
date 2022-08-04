@@ -1,11 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from starlette import status
 from starlette.responses import FileResponse
 
 from app.routers import RouterTags
-from app.routers.auth import verify_current_user
 from app.schemas.markdown_schema import UserMarkdownCreate
-from app.schemas.user_schema import User
 from app.service.markdown.markdown_converter import MarkdownConverter, save_markdown
 
 router = APIRouter(

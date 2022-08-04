@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from starlette.testclient import TestClient
 
 from app.core.config import get_config_settings
+from app.database.cache import get_redis
 from app.database.database import Base, get_db
 from app.main import create_app
 from app.tests.utils.test_utils import get_access_token_for_normal_user, get_access_token_for_admin_user
@@ -58,11 +59,11 @@ def client(app: FastAPI, test_db: Session) -> Generator[TestClient, Any, None]:
     def _get_test_db():
         yield test_db
 
-    # def _get_test_redis():
-    #     yield test_redis
+    def _get_test_redis():
+        yield fakeredis.FakeStrictRedis(server=fakeredis.FakeServer())
 
     app.dependency_overrides[get_db] = _get_test_db
-    # app.dependency_overrides[get_redis] = _get_test_redis
+    app.dependency_overrides[get_redis] = _get_test_redis
     with TestClient(app) as client:
         yield client
 

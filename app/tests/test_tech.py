@@ -47,7 +47,7 @@ class TestTechCategoryRouter:
         find = test_redis.get(redis_key)
         assert find
 
-    def test_get_tech_categories(self, client: TestClient, test_redis):
+    def test_get_tech_categories(self, client: TestClient):
         response = client.get(self.url)
         assert response.status_code == status.HTTP_200_OK
 

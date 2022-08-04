@@ -64,6 +64,11 @@ async def get_jwt_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Se
     return Token(access_token=jwt_token, token_type="bearer")
 
 
+@router.get("/join", response_class=HTMLResponse)
+async def user_join_page(request: Request):
+    return templates.TemplateResponse("join.html", {"request": request})
+
+
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})

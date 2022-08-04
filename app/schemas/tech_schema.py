@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel, PositiveInt, validator
+from pydantic import BaseModel, PositiveInt, validator, Field
 
 
 class TechStackBase(BaseModel):
@@ -8,8 +8,8 @@ class TechStackBase(BaseModel):
 
 
 class TechStackRegister(BaseModel):
-    name: str
-    color: str | None = None
+    name: str = Field(..., min_length=1, max_length=50, title="Tech Stack Name")
+    color: str | None = Field(None, min_length=0, max_length=20, title="Tech Stack background color of logo")
 
     @validator("color")
     def replace_color(cls, color):
@@ -19,9 +19,9 @@ class TechStackRegister(BaseModel):
 
 
 class TechStack(TechStackBase):
-    name: str
+    name: str = Field(..., min_length=1, max_length=50, title="Tech Stack Name")
+    color: str | None = Field(None, min_length=0, max_length=20, title="Tech Stack background color of logo")
     tech_category_id: PositiveInt
-    color: str | None = None
 
     class Config:
         orm_mode = True
@@ -32,11 +32,13 @@ class TechCategoryBase(BaseModel):
 
 
 class TechCategoryRegister(BaseModel):
-    name: str
+    # ... => require=True 와 동일한 뜻
+    # ... 이 불편하면 자세를 고쳐앉고 default=Required 로 써도 된다.
+    name: str = Field(..., min_length=1, max_length=50, title="Tech Category Name", example="Programming Langauge")
 
 
 class TechCategory(TechCategoryBase):
-    name: str
+    name: str = Field(..., min_length=1, max_length=50, title="Tech Category Name")
     tech_stacks: List[TechStack] = []
 
     class Config:

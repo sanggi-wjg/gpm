@@ -6,7 +6,7 @@ from app.service import user_service
 from app.schemas.user_schema import UserRegister
 
 
-def get_access_token_for_normal_user(client: TestClient, test_db: Session, email: str, password: str):
+def get_access_token_for_normal_user(client: TestClient, test_db: Session, email: str, password: str) -> dict:
     register_user = UserRegister(email=email, password1=password, password2=password)
     user_service.create_user(test_db, register_user)
 
@@ -17,7 +17,7 @@ def get_access_token_for_normal_user(client: TestClient, test_db: Session, email
     }
 
 
-def get_access_token_for_admin_user(client: TestClient, test_db: Session, email: str, password: str):
+def get_access_token_for_admin_user(client: TestClient, test_db: Session, email: str, password: str) -> dict:
     register_user = UserRegister(email=email, password1=password, password2=password)
     user_service.create_admin_user(test_db, register_user)
 
