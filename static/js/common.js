@@ -28,19 +28,21 @@ function is_authenticated() {
         const jwt = jwt_decode(token);
         const exp = jwt.exp;
         if (exp < (new Date().getTime() + 1) / 1000) {
+            remove_access_token();
             return false;
         }
     } catch (err) {
+        remove_access_token();
         return false;
     }
     return true;
 }
 
-function remove_access_token(){
+function remove_access_token() {
     localStorage.removeItem(TOKEN_KEY);
 }
 
-$(document).ready(function () {
+function set_cookie_to_storage() {
     let token = localStorage.getItem(TOKEN_KEY)
     if (token === '' || token === null || token === 'null' || token === undefined) {
         const token_cookie = get_cookie(TOKEN_KEY)
@@ -49,6 +51,11 @@ $(document).ready(function () {
             localStorage.setItem(TOKEN_KEY, token_cookie);
         }
     }
+}
+
+$(document).ready(function () {
+    set_cookie_to_storage();
+
     if (is_authenticated()) {
         $("#btn_login").hide();
         // $("#btn_logout").show();

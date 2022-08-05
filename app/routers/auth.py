@@ -1,12 +1,9 @@
 import uuid
 
-import requests
 from fastapi import Depends, APIRouter, Request
-from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
-from starlette import status
 from starlette.responses import HTMLResponse, RedirectResponse
 
 from app.core.config import get_config_settings
@@ -17,7 +14,8 @@ from app.routers.home import templates
 from app.schemas.user_schema import UserProvidedRegister
 from app.service import user_service
 from app.routers import RouterTags
-from app.schemas.auth_schema import Token, TokenData, GithubToken
+from app.schemas.auth_schema import Token, TokenData
+from app.service.provider.github import GitHubAPI
 from app.utils.authentication import verify_password, create_jwt_access_token
 
 router = APIRouter(
@@ -82,28 +80,32 @@ async def login_github_redirect():
 
 
 @router.get("/login/github/callback")
-async def login_github_callback(request: Request, code: str, state: str = None, db: Session = Depends(get_db)):
-    response = requests.post(
-        "https://github.com/login/oauth/access_token",
-        data=jsonable_encoder({
-            'client_id': settings.github_client_id,
-            'client_secret': settings.github_secret,
-            'code': code,
-        }),
-        headers={"Accept": "application/json"}
-    )
-    if response.status_code != status.HTTP_200_OK:
-        raise BadCredentials()
-    github_token = GithubToken(**response.json(), state=state)
+async def login_github_callback(code: str, state: str = None, db: Session = Depends(get_db)):
+    # response = requests.post(
+    #     "https://github.com/login/oauth/access_token",
+    #     data=jsonable_encoder({
+    #         'client_id': settings.github_client_id,
+    #         'client_secret': settings.github_secret,
+    #         'code': code,
+    #     }),
+    #     headers={"Accept": "application/json"}
+    # )
+    # if response.status_code != status.HTTP_200_OK:
+    #     raise BadCredentials()
+    # github_token = GithubToken(**response.json(), state=state)
+    #
+    # response = requests.get("https://api.github.com/user", headers={
+    #     'Accept': 'application/vnd.github+json',
+    #     'Authorization': f"{github_token.token_type} {github_token.access_token}"
+    # })
+    # if response.status_code != status.HTTP_200_OK:
+    #     raise BadCredentials()
 
-    response = requests.get("https://api.github.com/user", headers={
-        'Accept': 'application/vnd.github+json',
-        'Authorization': f"{github_token.token_type} {github_token.access_token}"
-    })
-    if response.status_code != status.HTTP_200_OK:
-        raise BadCredentials()
+    github_api = GitHubAPI()
+    github_token = await github_api.request_access_token(code, state)
+    github_user = await github_api.request_user_info(github_token)
 
-    user_email = response.json()['email']
+    user_email = github_user['email']
     find_user = user_service.find_user_by_email_and_provider(db, user_email, UserProvider.GITHUB)
     if not find_user:
         user_service.create_provider_user(
